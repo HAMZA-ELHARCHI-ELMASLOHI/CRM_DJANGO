@@ -1,0 +1,15 @@
+{% extends 'account/home_page.html' %}
+
+
+{% block content %}
+<a href="{% url 'products:product-create'%}">Create product</a><br>
+
+{% for p in products %}
+    {{p.name}}
+    <a href="{% url 'products:product-detail' p.pk%}">view</a>
+    <a href="{% url 'products:product-update' p.pk%}"> update</a>
+    <a href="{% url 'products:product-delete' p.pk%}"> delete</a>
+
+    <br>
+{% endfor %}
+{% endblock content %}

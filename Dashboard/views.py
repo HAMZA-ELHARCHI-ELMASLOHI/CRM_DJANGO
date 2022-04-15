@@ -24,37 +24,6 @@ class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
     pass
 
 
-# Product views
 
-class ProductCreateView(LoginRequiredMixin, generic.CreateView):
-    pass
 
-class ProductListView(LoginRequiredMixin, generic.ListView):
-    pass
-
-class ProductDetailView(LoginRequiredMixin, generic.DetailView):
-    pass
-
-class ProductDeleteView(LoginRequiredMixin, generic.DeleteView):
-    pass
-
-class ProductUpdateView(LoginRequiredMixin, generic.UpdateView):
-    pass
-
-#Customers views
-
-class CustomerCreateView(LoginRequiredMixin, generic.CreateView):
-    pass
-
-class CustomerListView(LoginRequiredMixin, generic.ListView):
-    pass
-
-class CustomerDetailView(LoginRequiredMixin, generic.DetailView):
-    pass
-
-class CustomerDeleteView(LoginRequiredMixin, generic.DeleteView):
-    pass
-
-class CustomerUpdateView(LoginRequiredMixin, generic.UpdateView):
-    pass
 

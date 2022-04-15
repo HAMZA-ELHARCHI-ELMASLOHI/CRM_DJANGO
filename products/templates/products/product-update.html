@@ -1,0 +1,12 @@
+{% extends 'account/home_page.html' %}
+
+
+{% block content %}
+update
+    <form method="POST">
+        {% csrf_token %}
+        {{form}}
+        <button > Submit </button>
+    </form>
+    
+{% endblock content %}
