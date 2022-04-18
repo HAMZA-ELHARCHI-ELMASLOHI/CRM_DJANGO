@@ -1,0 +1,14 @@
+{% extends 'account/home_page.html' %}
+
+
+{% block content %}
+
+
+{% for c in categories %}
+
+    {{c.name}}
+    <a href="{% url 'products:categorie-delete' c.pk%}"> delete</a>
+
+    <br>
+{% endfor %}
+{% endblock content %}

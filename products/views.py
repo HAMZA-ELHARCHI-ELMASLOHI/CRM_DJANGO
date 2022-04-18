@@ -1,8 +1,8 @@
 from django.shortcuts import render, reverse
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Product
-from .forms import ProductModelForm
+from .models import Categorie, Product
+from .forms import ProductModelForm, CategorieModelForm
 # Product views
 
 class ProductListView(LoginRequiredMixin, generic.ListView):
@@ -49,3 +49,28 @@ class ProductDeleteView(LoginRequiredMixin, generic.DeleteView):
     def get_queryset(self):
         return Product.objects.all()
 
+
+# Categories
+
+class CategorieListView(LoginRequiredMixin, generic.ListView):
+    template_name = "categories/categorie-list.html"
+    
+    def get_queryset(self):
+        return Categorie.objects.all()
+
+    context_object_name='categories'
+
+class CategorieCreateView(LoginRequiredMixin, generic.CreateView):
+    template_name = "categories/categorie-create.html"
+    form_class = CategorieModelForm
+
+    def get_success_url(self):
+        return reverse("products:product-create")
+
+
+class CategorieDeleteView(LoginRequiredMixin, generic.DeleteView):
+    template_name = "categories/categorie-delete.html"
+    def get_success_url(self):
+        return reverse("products:categorie-create")
+    def get_queryset(self):
+        return Categorie.objects.all()

@@ -2,8 +2,8 @@
 
 
 {% block content %}
-update
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST">
+        are you sure want to delete 
         {% csrf_token %}
         {{form}}
         <button > Submit </button>

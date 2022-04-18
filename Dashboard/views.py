@@ -1,9 +1,13 @@
 from multiprocessing import context
+from urllib import request
 from django.shortcuts import render
+from django.urls import reverse
+
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from .models import UserProfile
+from .forms import ProfileModelForm
 from django.contrib.auth import get_user_model
 
 User=get_user_model()
@@ -16,14 +20,26 @@ def home(request):
 
 
 # Profile views 
+
+
 class ProfileDetailView(LoginRequiredMixin, generic.DetailView):
-    template_name ='dashboard/profile.html'
+    template_name ='dashboard/profile.html' 
+    context_object_name='userprofile'
+
+    def get_queryset(self):
+        return UserProfile.objects.all()
+
     
 
 class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
-    pass
+    template_name = "dashboard/profile-update.html"
+    form_class = ProfileModelForm
 
+    def get_queryset(self):
+        return UserProfile.objects.all()
 
+    def get_success_url(self):
+        return reverse("Dashboard:dash")
 
 
 

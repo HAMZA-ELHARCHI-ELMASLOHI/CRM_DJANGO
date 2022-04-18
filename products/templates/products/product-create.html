@@ -2,10 +2,13 @@
 
 
 {% block content %}
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{form}}
         <button > Submit </button>
     </form>
-    
+    <a href="{% url 'products:categorie-create' %}"> Add Categorie </a>
+    <a href="{% url 'products:categorie-list' %}"> Categories </a>
+
+
 {% endblock content %}

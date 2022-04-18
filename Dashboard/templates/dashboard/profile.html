@@ -1,9 +1,19 @@
-{% extends 'dashboard/dash-base.html'%}
+{% extends 'account/home_page.html'%}
 
+{% load static %}
 
-{% block dash %}
+{% block content %}
 <div id="main-content" class="h-full w-full bg-gray-50 relative overflow-y-auto lg:ml-64">
+sss
+{{user.username}}
+{{userprofile.age}}
+{{userprofile.email}}
+<img src="{{ userprofile.image.url }}">
 
-Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat saepe ducimus distinctio tempore inventore, nemo
+<a href="{% url 'Dashboard:profile-update' user.userprofile.pk%}"> update</a>
+
+
+<br>
+
 </div>
-{% endblock dash %}
+{% endblock content %}

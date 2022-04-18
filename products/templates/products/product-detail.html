@@ -7,5 +7,7 @@
 {{products.description}}<br>
 {{products.date_added}}<br>
 {{products.categorie}}<br>
+<a href="{% url 'products:product-delete' products.pk%}"> delete</a>
+<a href="{% url 'products:product-update' products.pk%}"> update</a>
 
 {% endblock content %}
