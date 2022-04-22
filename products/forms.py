@@ -10,6 +10,7 @@ class ProductModelForm(forms.ModelForm):
             'product_image',
             'description',
             'categorie',
+            'price',
         )
 
 

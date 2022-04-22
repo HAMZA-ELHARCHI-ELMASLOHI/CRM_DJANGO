@@ -1,0 +1,35 @@
+{% extends 'account/home_page.html' %}
+{% load static %}
+
+{% block content %}
+        hi
+        {{user.username}}
+
+      {% for p in items %}
+      f
+
+        {{p.product.name}}
+        {{p.quantity}}
+        {{p.price}}
+        <img src="{{ p.product_image.url}}" ">
+
+        <a href="{{ p.product.get_delete_from_cart_url }}" >
+          dellete from cart
+        </a>
+        <br>
+        {% endfor %}
+
+
+
+
+{% for p in products %}
+
+    {{p.name}}
+    <a href="{% url 'products:product-detail' p.pk%}">view</a>
+
+    <br>
+{% endfor %}
+
+
+{% endblock content %}
+

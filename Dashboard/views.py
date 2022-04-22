@@ -10,7 +10,8 @@ from .models import UserProfile
 from .forms import ProfileModelForm
 from django.contrib.auth import get_user_model
 
-User=get_user_model()
+
+#User=get_user_model()
 # Create your views here.
 
 @login_required
@@ -27,7 +28,7 @@ class ProfileDetailView(LoginRequiredMixin, generic.DetailView):
     context_object_name='userprofile'
 
     def get_queryset(self):
-        return UserProfile.objects.all()
+        return UserProfile.objects.filter(user=self.request.user)
 
     
 
@@ -36,7 +37,7 @@ class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
     form_class = ProfileModelForm
 
     def get_queryset(self):
-        return UserProfile.objects.all()
+        return UserProfile.objects.filter(user=self.request.user)
 
     def get_success_url(self):
         return reverse("Dashboard:dash")

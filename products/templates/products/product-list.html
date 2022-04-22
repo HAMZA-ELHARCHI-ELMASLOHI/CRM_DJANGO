@@ -1,9 +1,11 @@
 {% extends 'account/home_page.html' %}
-
+{% load static %}
 
 {% block content %}
-<a href="{% url 'products:product-create'%}">Create product</a><br>
+{% if request.user.is_manager%}
 
+<a href="{% url 'products:product-create'%}">Create product</a><br>
+{% endif %}
 <div class="bg-white">
     <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
       <h2 class="text-2xl font-extrabold tracking-tight text-gray-900">Customers also purchased</h2>
@@ -16,17 +18,27 @@
           <div class="mt-4 flex justify-between">
             <div>
               <h3 class="text-sm text-gray-700">
-                <a href="{% url 'products:product-detail' p.pk%}">
+                <a href="{% url 'products:product-detail' p.slug%}">
                   <span aria-hidden="true" class="absolute inset-0"></span>
+                  {{p.id}}
                   {{p.name}}
-
                 </a>
+
               </h3>
               <p class="mt-1 text-sm text-gray-500">Black</p>
             </div>
             <p class="text-sm font-medium text-gray-900">$35</p>
+
           </div>
+
+
         </div>
+        <button data-product="{{p.slug}}" data-action="add" class="update-cart">ccct </button>
+
+        <a href="{{ p.get_add_to_cart_url }}" >
+          Add to cart
+        </a>
+
         {% endfor %}
 
       </div>
@@ -42,4 +54,26 @@
 
     <br>
 {% endfor %}
+<script>
+  const user = '{{request.user}}'	
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+</script>
+<script src="{% static 'products/js/cart.js' %}"></script>
+
 {% endblock content %}
+
