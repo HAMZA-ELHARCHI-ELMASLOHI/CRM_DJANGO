@@ -25,6 +25,10 @@ class Product(models.Model):
         return reverse("products:add-to-cart", kwargs={
             'slug': self.slug
         })
+    def get_remove_from_cart_url(self):
+        return reverse("products:remove-from-cart", kwargs={
+            'slug': self.slug
+        })
     def get_delete_from_cart_url(self):
         return reverse("products:delete-from-cart", kwargs={
             'slug': self.slug
@@ -42,7 +46,7 @@ class Categorie(models.Model):
 
 class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
+    quantity = models.IntegerField(default=0)
     #cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -50,20 +54,38 @@ class CartItem(models.Model):
             return  " item " + self.product.name
 
     
-    
+    def get_add_to_cart_url(self):
+        return reverse("products:add-to-cart", kwargs={
+            'slug': self.slug
+        })
+    def get_remove_from_cart_url(self):
+        return reverse("products:remove-from-cart", kwargs={
+            'slug': self.slug
+        })
+    def get_delete_from_cart_url(self):
+        return reverse("products:delete-from-cart", kwargs={
+            'slug': self.slug
+        })
 
     @property
     def get_total(self):
         total = self.product.price * self.quantity
         return total
 
-
+    
+    
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     #created_at = models.DateTimeField(auto_now_add=True)
     items = models.ManyToManyField(CartItem)
 
-    
+    @property
+    def get_cart_total(self):
+        total = 0
+        for cart_item in self.items.all():
+            total += cart_item.get_total()
+        return total
+        
     def __str__(self):
             return  self.user.username + '-cart'
 

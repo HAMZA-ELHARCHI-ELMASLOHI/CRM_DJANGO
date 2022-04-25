@@ -4,19 +4,28 @@
 {% block content %}
         hi
         {{user.username}}
-
       {% for p in items %}
-      f
+      
+      {% csrf_token %}
+
 
         {{p.product.name}}
-        {{p.quantity}}
+        {{p.product.price}}
+        {{p.get_total}}
+        <div class="quantity">{{p.quantity}}</div>
         {{p.price}}
         <img src="{{ p.product_image.url}}" ">
+          <button data-product="{{p.product.slug}}" data-action="add" class="update-cart" type="click"> add quantity   </button>
+          <button data-product="{{p.product.slug}}" data-action="remove" class="remove-cart" type="click"> remove quantity   </button>
+
+        
+
 
         <a href="{{ p.product.get_delete_from_cart_url }}" >
           dellete from cart
         </a>
         <br>
+        ****{{cart.user.username}}****
         {% endfor %}
 
 
@@ -29,7 +38,26 @@
 
     <br>
 {% endfor %}
-
-
+<script>
+  const user = '{{request.user}}'	
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+</script>
+<script src="{% static 'products/js/cart.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {% endblock content %}
 

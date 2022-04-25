@@ -30,13 +30,13 @@
             <p class="text-sm font-medium text-gray-900">$35</p>
 
           </div>
-
+          <div class="quantity">{{p.quantity}}</div>
+{{var1}}
 
         </div>
-        <button data-product="{{p.slug}}" data-action="add" class="update-cart">ccct </button>
+        <button data-product="{{p.slug}}" data-action="add" class="update-cart">          Add to cart        </button>
 
         <a href="{{ p.get_add_to_cart_url }}" >
-          Add to cart
         </a>
 
         {% endfor %}

@@ -6,7 +6,8 @@ from .forms import ProductModelForm, CategorieModelForm
 # Product views
 
 from account.mixins import ManagerRequiredMixin
-
+from django.http import JsonResponse
+import json
 
 class ProductListView(LoginRequiredMixin, generic.ListView):
     template_name = "products/product-list.html"
@@ -90,43 +91,58 @@ class CartItemsView(generic.ListView):
     context_object_name='items'
     def get_queryset(self):
         cart=Cart.objects.get(user=self.request.user)
+        price=cart.get_cart_total
+
         return CartItem.objects.filter(user=self.request.user)
+
+
+    template_name='cart/cart.html'
+
+class CartView(generic.TemplateView):
+    model = Cart
+    context_object_name='cart'
+   
 
     template_name='cart/cart.html'
 
 
-class CartItemsCreateView(ManagerRequiredMixin, generic.CreateView):
-    template_name = "products/product-list.html"
 
-    def get_queryset(self):
-        cart=Cart.objects.get(user=self.request.user)
-        product=Product.objects.get(name=self.request.name)
-        return CartItem.objects.create(product=product, quantity=1, user=self.request.user)
-    
-
-
-class CartItemsDeleteView(ManagerRequiredMixin, generic.DeleteView):
-    template_name = "categories/categorie-delete.html"
-    def get_success_url(self):
-        return reverse("products:categorie-create")
-    def get_queryset(self):
-        return Categorie.objects.all()
 
 
 
 
 
 def add_to_cart(request, slug):
-    item = get_object_or_404(Product, slug=slug)
-    print(item)
-    cart_item = CartItem.objects.create(
-            product=item,
-            user=request.user, 
-        )
-    
-    cart_item.save()
-    #messages.info(request, "This item quantity was updated.")
-    return redirect("products:cart")
+    #print(request)
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' :
+        slug = json.load(request)['slug']
+        item = get_object_or_404(Product, slug=slug)
+        cart_item, created = CartItem.objects.get_or_create(
+                product=item,
+                user=request.user, 
+            )
+        cart_item.quantity= (cart_item.quantity +1)
+        cart_item.save()
+        #messages.info(request, "This item quantity was updated.")
+        return JsonResponse({'quantity':cart_item.quantity}, status=200, safe=False )
+
+def remove_from_cart(request, slug):
+    #print(request)
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' :
+        slug = json.load(request)['slug']
+        item = get_object_or_404(Product, slug=slug)
+        cart_item, created = CartItem.objects.get_or_create(
+                product=item,
+                user=request.user, 
+            )
+        if(cart_item.quantity>0):
+            cart_item.quantity= (cart_item.quantity -1)
+            cart_item.save()
+        else:
+            delete_from_cart(request, slug)
+        #messages.info(request, "This item quantity was updated.")
+        return JsonResponse({'quantity':cart_item.quantity}, status=200, safe=False )
+
 
 def delete_from_cart(request, slug):
     item = get_object_or_404(Product, slug=slug)
