@@ -20,8 +20,8 @@ urlpatterns = [
     path('<int:pk>/categorie/delete/', CategorieDeleteView.as_view(), name='categorie-delete'),
 
     # cart
-    path('cart/', CartItemsView.as_view(), name='cart'),
-    path('cart/', CartView.as_view(), name='cart-detail'),
+    #path('cart/', CartItemsView.as_view(), name='cart'),
+    path('cart/', CartView.as_view(), name='cart'),
 
     path('add-to-cart/<slug>/', add_to_cart, name='add-to-cart'),
     path('cart/add-to-cart/<slug>/', add_to_cart, name='add-to-cart'),

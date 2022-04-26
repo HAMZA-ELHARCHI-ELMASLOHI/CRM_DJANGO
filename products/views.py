@@ -91,19 +91,24 @@ class CartItemsView(generic.ListView):
     context_object_name='items'
     def get_queryset(self):
         cart=Cart.objects.get(user=self.request.user)
-        price=cart.get_cart_total
+        #price=cart.get_cart_total
 
         return CartItem.objects.filter(user=self.request.user)
 
 
     template_name='cart/cart.html'
 
-class CartView(generic.TemplateView):
-    model = Cart
-    context_object_name='cart'
-   
+class CartView(generic.View):
+    def get(self, *args, **kwargs):
+        cart=Cart.objects.get(user=self.request.user)
+        items=CartItem.objects.filter(cart=cart)
+        context = {
+            'cart': cart,
+            'items':items
+        }
+        return render(self.request, 'cart/cart.html', context)
 
-    template_name='cart/cart.html'
+
 
 
 
@@ -117,9 +122,11 @@ def add_to_cart(request, slug):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' :
         slug = json.load(request)['slug']
         item = get_object_or_404(Product, slug=slug)
+        cart=Cart.objects.get(user=request.user)
+
         cart_item, created = CartItem.objects.get_or_create(
                 product=item,
-                user=request.user, 
+                cart=cart, 
             )
         cart_item.quantity= (cart_item.quantity +1)
         cart_item.save()
@@ -131,9 +138,11 @@ def remove_from_cart(request, slug):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' :
         slug = json.load(request)['slug']
         item = get_object_or_404(Product, slug=slug)
+        cart=Cart.objects.get(user=request.user)
+
         cart_item, created = CartItem.objects.get_or_create(
                 product=item,
-                user=request.user, 
+                cart=cart, 
             )
         if(cart_item.quantity>0):
             cart_item.quantity= (cart_item.quantity -1)

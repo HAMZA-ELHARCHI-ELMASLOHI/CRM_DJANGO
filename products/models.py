@@ -47,13 +47,26 @@ class Categorie(models.Model):
 class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
-    #cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
+    #user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    @property
+    def get_total(self):
+        total = self.product.price * self.quantity
+        return total
 
     def __str__(self):  
             return  " item " + self.product.name
 
     
+    
+    
+    
+class Cart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    #created_at = models.DateTimeField(auto_now_add=True)
+    #items = models.ManyToManyField(CartItem)
+
     def get_add_to_cart_url(self):
         return reverse("products:add-to-cart", kwargs={
             'slug': self.slug
@@ -68,24 +81,13 @@ class CartItem(models.Model):
         })
 
     @property
-    def get_total(self):
-        total = self.product.price * self.quantity
-        return total
-
-    
-    
-class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    #created_at = models.DateTimeField(auto_now_add=True)
-    items = models.ManyToManyField(CartItem)
-
-    @property
     def get_cart_total(self):
-        total = 0
-        for cart_item in self.items.all():
-            total += cart_item.get_total()
-        return total
-        
+        cart=Cart.objects.get(user=self.user)
+
+        orderitems = CartItem.objects.filter(cart=cart)
+        total = sum([item.get_total for item in orderitems])
+        return total 
+
     def __str__(self):
             return  self.user.username + '-cart'
 
@@ -104,3 +106,5 @@ def post_user_created_signal(sender, instance, created, **kwargs):
 
 
 post_save.connect(post_user_created_signal, sender=User) 
+
+

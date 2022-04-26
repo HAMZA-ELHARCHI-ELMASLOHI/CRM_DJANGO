@@ -4,14 +4,15 @@
 {% block content %}
         hi
         {{user.username}}
+        {{cart.user.username}}
+
       {% for p in items %}
       
       {% csrf_token %}
 
-
         {{p.product.name}}
         {{p.product.price}}
-        {{p.get_total}}
+       +++ {{p.get_total}}+++
         <div class="quantity">{{p.quantity}}</div>
         {{p.price}}
         <img src="{{ p.product_image.url}}" ">
@@ -25,8 +26,8 @@
           dellete from cart
         </a>
         <br>
-        ****{{cart.user.username}}****
         {% endfor %}
+        ****{{cart.get_cart_total}}****
 
 
 
