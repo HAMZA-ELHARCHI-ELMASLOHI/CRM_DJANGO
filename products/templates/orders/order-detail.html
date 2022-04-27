@@ -1,0 +1,26 @@
+{% extends 'account/home_page.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+    {{orders.name}}
+    {{orders.total_price}}
+
+    <a href="{% url 'products:order-delete' orders.pk%}"> delete</a>
+    <a href="{% url 'products:order-update' orders.pk%}"> update</a>
+
+    
+    {% for i in items %}
+        {{i.name}}
+        {{i.quantity}}
+
+    {% endfor %}
+
+    <br>
+
+<a href="{% url 'products:order-list'%}">back</a>
+
+{% endblock content %}
+

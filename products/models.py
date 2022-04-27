@@ -13,7 +13,7 @@ class Product(models.Model):
     description = models.TextField()
     #date_added = models.DateTimeField(auto_now_add=True)
     categorie=models.ForeignKey('Categorie', on_delete=models.CASCADE)
-    price = models.FloatField(blank=True)
+    price = models.DecimalField(max_digits=5, decimal_places=2, blank=True)
     slug = models.SlugField()
 
     def get_absolute_url(self):
@@ -46,7 +46,7 @@ class Categorie(models.Model):
 
 class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=0)
+    quantity = models.PositiveIntegerField(default=1)
     cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
     #user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -97,7 +97,29 @@ class Cart(models.Model):
 
 
 
-    
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='order_user')
+    name=models.CharField(max_length=50)
+    #items=models.ManyToManyField(CartItem)
+    total_price= models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+            return  self.user.username+str(self.id) + '-order'
+
+
+class Orderitems(models.Model):
+    order = models.ForeignKey(Order,
+                              related_name='items',
+                              on_delete=models.CASCADE)
+
+    name=models.CharField(max_length=50)
+    product = models.ForeignKey(Product,related_name='order_items',on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return str(self.id)
+
 
 
 def post_user_created_signal(sender, instance, created, **kwargs):

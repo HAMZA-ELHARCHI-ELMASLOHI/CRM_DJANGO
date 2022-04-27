@@ -1,0 +1,21 @@
+{% extends 'account/home_page.html' %}
+{% load static %}
+
+{% block content %}
+
+
+{% for p in orders %}
+
+    {{p.name}}
+    {{p.total_price}}
+
+    
+    
+    <a href="{% url 'products:order-detail' p.pk%}">view</a>
+
+    <br>
+{% endfor %}
+
+
+{% endblock content %}
+

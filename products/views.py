@@ -1,8 +1,8 @@
 from django.shortcuts import render, reverse, get_object_or_404, redirect
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Categorie, Product, Cart, CartItem
-from .forms import ProductModelForm, CategorieModelForm
+from .models import Categorie, Product, Cart, CartItem, Order, Orderitems
+from .forms import ProductModelForm, CategorieModelForm, OrderModelForm
 # Product views
 
 from account.mixins import ManagerRequiredMixin
@@ -160,3 +160,82 @@ def delete_from_cart(request, slug):
     print(cart_item)
     #messages.info(request, "This item quantity was updated.")
     return redirect("products:product-list")
+
+
+#Orders
+
+class OrdersListView(LoginRequiredMixin, generic.ListView):
+    template_name = "orders/order-list.html"
+    
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)
+
+    
+
+    context_object_name='orders'
+
+class OrdersDetailView(LoginRequiredMixin, generic.DetailView):
+    template_name = "orders/order-detail.html"
+
+    def get(self, *args, **kwargs):
+        order_id = self.kwargs['pk']
+        order=Order.objects.get(id=order_id)
+        items=Orderitems.objects.filter(order=order)
+        context = {
+            'orders':order,
+            'items':items
+        }
+        return render(self.request, 'orders/order-detail.html', context)
+
+    
+
+    context_object_name='orders'
+
+
+
+
+class CreateOrder(generic.View):
+    def get(self, *args, **kwargs):
+        cart=Cart.objects.get(user=self.request.user)
+        items=CartItem.objects.filter(cart=cart)
+        total_price=cart.get_cart_total
+        context = {
+            'items':items
+        }
+        order, created = Order.objects.get_or_create(
+                name=self.__str__() ,
+                user=self.request.user,
+                total_price=total_price
+            )
+        
+
+        for item in items:
+            Orderitems.objects.create(order=order,name=item.product.name ,product=item.product, price=item.get_total, quantity=item.quantity)
+        order.save()
+        return render(self.request, 'products/product-list.html', context)
+
+class OrdersCreateView(ManagerRequiredMixin, generic.CreateView):
+    template_name = "orders/order-create.html"
+    form_class = OrderModelForm
+
+    def get_success_url(self):
+        return reverse("products:order-list")
+
+
+class OrdersUpdateView(ManagerRequiredMixin, generic.UpdateView):
+    template_name = "orders/order-update.html"
+    form_class = OrderModelForm
+
+    def get_queryset(self):
+        return Order.objects.all()
+    def get_success_url(self):
+        return reverse("products:order-list")
+
+
+
+class OrdersDeleteView(ManagerRequiredMixin, generic.DeleteView):
+    template_name = "orders/order-delete.html"
+    def get_success_url(self):
+        return reverse("products:order-list")
+    def get_queryset(self):
+        return Order.objects.all()
