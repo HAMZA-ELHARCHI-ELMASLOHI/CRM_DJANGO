@@ -8,10 +8,10 @@
     {{orders.name}}
     {{orders.total_price}}
 
-    <a href="{% url 'products:order-delete' orders.pk%}"> delete</a>
-    <a href="{% url 'products:order-update' orders.pk%}"> update</a>
+    <a href="{% url 'shop:order-delete' orders.pk%}"> delete</a>
+    <a href="{% url 'shop:order-update' orders.pk%}"> update</a>
     
-    <a href="{% url 'products:order-invoice' orders.id  %}">pdf</a>
+    <a href="{% url 'shop:order-invoice' orders.id  %}">pdf</a>
 
     
     {% for i in items %}
@@ -22,7 +22,7 @@
 
     <br>
 
-<a href="{% url 'products:order-list'%}">back</a>
+<a href="{% url 'shop:order-list'%}">back</a>
 
 {% endblock content %}
 

@@ -6,14 +6,14 @@ from .views import (
     ,CreateOrder, pdf
     )
 
-app_name='products'
+app_name='shop'
 
 urlpatterns = [
-    path('', ProductListView.as_view(), name='product-list'),
-    path('p/<slug>/', ProductDetailView.as_view(), name='product-detail'),
-    path('create/', ProductCreateView.as_view(), name='product-create'),
-    path('<int:pk>/delete/', ProductDeleteView.as_view(), name='product-delete'),
-    path('<int:pk>/update/', ProductUpdateView.as_view(), name='product-update'),
+    path('products/', ProductListView.as_view(), name='product-list'),
+    path('product/<slug>/', ProductDetailView.as_view(), name='product-detail'),
+    path('products/create/', ProductCreateView.as_view(), name='product-create'),
+    path('products/<int:pk>/delete/', ProductDeleteView.as_view(), name='product-delete'),
+    path('products/<int:pk>/update/', ProductUpdateView.as_view(), name='product-update'),
     
     #categorie
     path('categories/', CategorieListView.as_view(), name='categorie-list'),
@@ -24,7 +24,7 @@ urlpatterns = [
     #path('cart/', CartItemsView.as_view(), name='cart'),
     path('cart/', CartView.as_view(), name='cart'),
 
-    path('add-to-cart/<slug>/', add_to_cart, name='add-to-cart'),
+    path('products/add-to-cart/<slug>/', add_to_cart, name='add-to-cart'),
     path('cart/add-to-cart/<slug>/', add_to_cart, name='add-to-cart'),
     path('cart/remove-from-cart/<slug>/', remove_from_cart, name='remove-from-cart'),
 

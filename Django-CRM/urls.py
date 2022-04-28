@@ -29,7 +29,7 @@ urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),
 
     path('dashboard/', include('Dashboard.urls', namespace='dashboard')),
-    path('products/', include('products.urls', namespace='products')),
+    path('shop/', include('shop.urls', namespace='shop')),
     path('customers/', include('customers.urls', namespace='customers')),
 
 

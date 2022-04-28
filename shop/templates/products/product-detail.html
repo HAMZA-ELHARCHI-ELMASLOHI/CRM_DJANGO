@@ -8,8 +8,8 @@
 {{products.date_added}}<br>
 {{products.categorie}}<br>
 {% if request.user.is_manager%}
-<a href="{% url 'products:product-delete' products.pk%}"> delete</a>
-<a href="{% url 'products:product-update' products.pk%}"> update</a>
+<a href="{% url 'shop:product-delete' products.pk%}"> delete</a>
+<a href="{% url 'shop:product-update' products.pk%}"> update</a>
 
 <a href="{{ products.get_add_to_cart_url }}" >
     Add to cart

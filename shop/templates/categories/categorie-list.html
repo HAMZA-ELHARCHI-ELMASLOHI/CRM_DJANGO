@@ -7,7 +7,7 @@
 {% for c in categories %}
 
     {{c.name}}
-    <a href="{% url 'products:categorie-delete' c.pk%}"> delete</a>
+    <a href="{% url 'shop:categorie-delete' c.pk%}"> delete</a>
 
     <br>
 {% endfor %}

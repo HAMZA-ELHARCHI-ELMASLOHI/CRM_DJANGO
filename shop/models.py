@@ -17,20 +17,20 @@ class Product(models.Model):
     slug = models.SlugField()
 
     def get_absolute_url(self):
-        return reverse("products:product-list", kwargs={
+        return reverse("shop:product-list", kwargs={
             'slug': self.slug
         })
 
     def get_add_to_cart_url(self):
-        return reverse("products:add-to-cart", kwargs={
+        return reverse("shop:add-to-cart", kwargs={
             'slug': self.slug
         })
     def get_remove_from_cart_url(self):
-        return reverse("products:remove-from-cart", kwargs={
+        return reverse("shop:remove-from-cart", kwargs={
             'slug': self.slug
         })
     def get_delete_from_cart_url(self):
-        return reverse("products:delete-from-cart", kwargs={
+        return reverse("shop:delete-from-cart", kwargs={
             'slug': self.slug
         })
     def __str__(self):
@@ -68,15 +68,15 @@ class Cart(models.Model):
     #items = models.ManyToManyField(CartItem)
 
     def get_add_to_cart_url(self):
-        return reverse("products:add-to-cart", kwargs={
+        return reverse("shop:add-to-cart", kwargs={
             'slug': self.slug
         })
     def get_remove_from_cart_url(self):
-        return reverse("products:remove-from-cart", kwargs={
+        return reverse("shop:remove-from-cart", kwargs={
             'slug': self.slug
         })
     def get_delete_from_cart_url(self):
-        return reverse("products:delete-from-cart", kwargs={
+        return reverse("shop:delete-from-cart", kwargs={
             'slug': self.slug
         })
 

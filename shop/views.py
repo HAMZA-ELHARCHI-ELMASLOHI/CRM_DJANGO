@@ -40,7 +40,7 @@ class ProductCreateView(ManagerRequiredMixin, generic.CreateView):
     form_class = ProductModelForm
 
     def get_success_url(self):
-        return reverse("products:product-list")
+        return reverse("shop:product-list")
 
 
 class ProductUpdateView(ManagerRequiredMixin, generic.UpdateView):
@@ -50,14 +50,14 @@ class ProductUpdateView(ManagerRequiredMixin, generic.UpdateView):
     def get_queryset(self):
         return Product.objects.all()
     def get_success_url(self):
-        return reverse("products:product-list")
+        return reverse("shop:product-list")
 
 
 
 class ProductDeleteView(ManagerRequiredMixin, generic.DeleteView):
     template_name = "products/product-delete.html"
     def get_success_url(self):
-        return reverse("products:product-list")
+        return reverse("shop:product-list")
     def get_queryset(self):
         return Product.objects.all()
 
@@ -77,13 +77,13 @@ class CategorieCreateView(ManagerRequiredMixin, generic.CreateView):
     form_class = CategorieModelForm
 
     def get_success_url(self):
-        return reverse("products:product-create")
+        return reverse("shop:product-create")
 
 
 class CategorieDeleteView(ManagerRequiredMixin, generic.DeleteView):
     template_name = "categories/categorie-delete.html"
     def get_success_url(self):
-        return reverse("products:categorie-create")
+        return reverse("shop:categorie-create")
     def get_queryset(self):
         return Categorie.objects.all()
 
@@ -165,7 +165,7 @@ def delete_from_cart(request, slug):
     cart_item = CartItem.objects.filter(product=item).delete()
     print(cart_item)
     #messages.info(request, "This item quantity was updated.")
-    return redirect("products:product-list")
+    return redirect("shop:product-list")
 
 
 #Orders
@@ -225,7 +225,7 @@ class OrdersCreateView(ManagerRequiredMixin, generic.CreateView):
     form_class = OrderModelForm
 
     def get_success_url(self):
-        return reverse("products:order-list")
+        return reverse("shop:order-list")
 
 
 class OrdersUpdateView(ManagerRequiredMixin, generic.UpdateView):
@@ -235,14 +235,14 @@ class OrdersUpdateView(ManagerRequiredMixin, generic.UpdateView):
     def get_queryset(self):
         return Order.objects.all()
     def get_success_url(self):
-        return reverse("products:order-list")
+        return reverse("shop:order-list")
 
 
 
 class OrdersDeleteView(ManagerRequiredMixin, generic.DeleteView):
     template_name = "orders/order-delete.html"
     def get_success_url(self):
-        return reverse("products:order-list")
+        return reverse("shop:order-list")
     def get_queryset(self):
         return Order.objects.all()
 
