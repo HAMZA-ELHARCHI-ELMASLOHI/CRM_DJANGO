@@ -3,7 +3,7 @@ from .views import (
     CategorieCreateView,  ProductListView, ProductDetailView, ProductCreateView, ProductDeleteView, ProductUpdateView,
      CategorieDeleteView, CategorieListView, CartItemsView,add_to_cart, delete_from_cart,
     remove_from_cart, CartView, OrdersCreateView, OrdersDeleteView, OrdersDetailView, OrdersListView, OrdersUpdateView
-    ,CreateOrder
+    ,CreateOrder, pdf
     )
 
 app_name='products'
@@ -37,5 +37,9 @@ urlpatterns = [
     path('order/create/', CreateOrder.as_view(), name='order-create'),
     path('order/<int:pk>/delete/', OrdersDeleteView.as_view(), name='order-delete'),
     path('order/<int:pk>/update/', OrdersUpdateView.as_view(), name='order-update'),
+
+    #order pdf invoice
+
+    path('order/invoice/<int:pk>', pdf.as_view(), name='order-invoice')
 
 ]

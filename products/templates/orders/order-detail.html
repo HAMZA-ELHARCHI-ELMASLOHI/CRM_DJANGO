@@ -10,12 +10,14 @@
 
     <a href="{% url 'products:order-delete' orders.pk%}"> delete</a>
     <a href="{% url 'products:order-update' orders.pk%}"> update</a>
+    
+    <a href="{% url 'products:order-invoice' orders.id  %}">pdf</a>
 
     
     {% for i in items %}
         {{i.name}}
         {{i.quantity}}
-
+        
     {% endfor %}
 
     <br>

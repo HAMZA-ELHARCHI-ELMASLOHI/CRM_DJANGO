@@ -3,10 +3,16 @@ from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Categorie, Product, Cart, CartItem, Order, Orderitems
 from .forms import ProductModelForm, CategorieModelForm, OrderModelForm
+
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import landscape
+from reportlab.platypus import Image
 # Product views
 
 from account.mixins import ManagerRequiredMixin
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 import json
 
 class ProductListView(LoginRequiredMixin, generic.ListView):
@@ -187,7 +193,6 @@ class OrdersDetailView(LoginRequiredMixin, generic.DetailView):
         }
         return render(self.request, 'orders/order-detail.html', context)
 
-    
 
     context_object_name='orders'
 
@@ -212,7 +217,8 @@ class CreateOrder(generic.View):
         for item in items:
             Orderitems.objects.create(order=order,name=item.product.name ,product=item.product, price=item.get_total, quantity=item.quantity)
         order.save()
-        return render(self.request, 'products/product-list.html', context)
+
+        return render(self.request,  'products/product-list.html', context)
 
 class OrdersCreateView(ManagerRequiredMixin, generic.CreateView):
     template_name = "orders/order-create.html"
@@ -239,3 +245,21 @@ class OrdersDeleteView(ManagerRequiredMixin, generic.DeleteView):
         return reverse("products:order-list")
     def get_queryset(self):
         return Order.objects.all()
+
+
+class pdf(LoginRequiredMixin, generic.DetailView):
+    template_name = "orders/order-detail.html"
+
+    def get(self, *args, **kwargs):
+        order_id = self.kwargs['pk']
+        order=Order.objects.get(id=order_id)
+        items=Orderitems.objects.filter(order=order)
+        buffer = io.BytesIO()
+        p = canvas.Canvas(buffer)
+        p.drawString(100, 100, f"Hello{order.name} {order.total_price} ")
+
+        p.showPage()
+        p.save()
+
+        buffer.seek(0)
+        return FileResponse(buffer, as_attachment=True, filename='hello.pdf')
