@@ -3,11 +3,13 @@ from email.policy import default
 from django.db import models
 from account.models import User
 from django.db.models.signals import post_save
-
+import uuid
 from django.shortcuts import reverse
+from django.core.mail import send_mail
 # Create your models here.
 
 class Product(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name=models.CharField(max_length=50)
     product_image=models.ImageField(default='images/products/product-default.png', upload_to='images/products/')
     description = models.TextField()
@@ -18,23 +20,24 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse("shop:product-list", kwargs={
-            'slug': self.slug
+            'id': self.id
         })
 
     def get_add_to_cart_url(self):
         return reverse("shop:add-to-cart", kwargs={
-            'slug': self.slug
+            'id': self.id
         })
     def get_remove_from_cart_url(self):
         return reverse("shop:remove-from-cart", kwargs={
-            'slug': self.slug
+            'id': self.id
         })
     def get_delete_from_cart_url(self):
         return reverse("shop:delete-from-cart", kwargs={
-            'slug': self.slug
+            'id': self.id
         })
     def __str__(self):
         return self.name
+
 
     
 class Categorie(models.Model):
@@ -46,7 +49,7 @@ class Categorie(models.Model):
 
 class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    quantity = models.PositiveIntegerField(default=0)
     cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
     #user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -69,15 +72,15 @@ class Cart(models.Model):
 
     def get_add_to_cart_url(self):
         return reverse("shop:add-to-cart", kwargs={
-            'slug': self.slug
+            'id': self.id
         })
     def get_remove_from_cart_url(self):
         return reverse("shop:remove-from-cart", kwargs={
-            'slug': self.slug
+            'id': self.id
         })
     def get_delete_from_cart_url(self):
         return reverse("shop:delete-from-cart", kwargs={
-            'slug': self.slug
+            'id': self.id
         })
 
     @property
@@ -86,6 +89,14 @@ class Cart(models.Model):
 
         orderitems = CartItem.objects.filter(cart=cart)
         total = sum([item.get_total for item in orderitems])
+        return total 
+
+    @property
+    def get_total_items(self):
+        cart=Cart.objects.get(user=self.user)
+
+        orderitems = CartItem.objects.filter(cart=cart)
+        total = sum([item.quantity for item in orderitems])
         return total 
 
     def __str__(self):
@@ -130,3 +141,10 @@ def post_user_created_signal(sender, instance, created, **kwargs):
 post_save.connect(post_user_created_signal, sender=User) 
 
 
+def order_created_signal(sender, instance, created, **kwargs):
+    if created:
+        print('listner work ')
+        #send_mail('a odrer has been created', 'see on website', 'hamza', recipient_list)
+
+
+post_save.connect(order_created_signal, sender=Order) 

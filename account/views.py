@@ -2,7 +2,9 @@ from audioop import reverse
 from django.shortcuts import render, reverse
 from django.http import HttpResponse
 from django.views import generic
-from .forms import CustomUserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import CustomUserCreationForm, ProfileModelForm
+from .models import UserProfile
 
 
 # Create your views here.
@@ -19,4 +21,24 @@ class SignUpView(generic.CreateView):
         return reverse('login')
 
 
+# Profile views 
 
+
+class ProfileDetailView(LoginRequiredMixin, generic.DetailView):
+    template_name ='account/profile.html' 
+    context_object_name='userprofile'
+
+    def get_queryset(self):
+        return UserProfile.objects.filter(user=self.request.user)
+
+    
+
+class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
+    template_name = "account/profile-update.html"
+    form_class = ProfileModelForm
+
+    def get_queryset(self):
+        return UserProfile.objects.filter(user=self.request.user)
+
+    def get_success_url(self):
+        return reverse("shop:product-list")

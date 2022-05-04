@@ -11,3 +11,15 @@ class CustomUserCreationForm(UserCreationForm):
 	class Meta:
 		model = User
 		fields = ['username','first_name', 'last_name' , 'email', 'password1', 'password2']
+
+from .models import UserProfile
+
+class ProfileModelForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = (
+            'name',
+            'email',
+            'age',
+            'image',
+        )

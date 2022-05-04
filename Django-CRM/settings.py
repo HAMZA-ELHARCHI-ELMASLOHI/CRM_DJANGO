@@ -138,10 +138,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL ='account.User'
 
-LOGIN_REDIRECT_URL="/dashboard"
+LOGIN_REDIRECT_URL="/shop/"
+SIGNUP_REDIRECT_URL="/shop/"
 
 LOGOUT_REDIRECT_URL="/"
 
 LOGIN_URL='/login'
 
 APPEND_SLASH=False
+
+DEFAULT_AUTO_FIELD = 'django.db.models.UUIDField'
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+

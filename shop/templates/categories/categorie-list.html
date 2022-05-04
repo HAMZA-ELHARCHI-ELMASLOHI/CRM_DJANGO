@@ -1,14 +1,11 @@
-{% extends 'account/home_page.html' %}
 
 
-{% block content %}
-
-
+dd
 {% for c in categories %}
 
     {{c.name}}
     <a href="{% url 'shop:categorie-delete' c.pk%}"> delete</a>
+    <a href="{% url 'shop:categorie-detail' c.pk%}"> view</a>
 
     <br>
 {% endfor %}
-{% endblock content %}

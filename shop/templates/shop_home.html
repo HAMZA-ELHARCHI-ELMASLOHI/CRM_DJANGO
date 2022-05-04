@@ -14,7 +14,7 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-light " style="background-color: #e3f2fd;">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="#" style="margin-left: 100px;">
         <img src="/media/images/logo.jpg" alt="" width="50" height="40">
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,10 +35,13 @@
             <a class="nav-link" href="{% url 'shop:cart'%}">Cart</a>
           </li>
           {% if request.user.is_authenticated %}
-
-          <li class="nav-item float-right">
-            <a class="nav-link " href="{% url 'logout'%}">Logout</a>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'account:profile' user.pk%}">Profile</a>
           </li>
+          <li class="d-flex nav-item">
+            <a class="nav-link" href="{% url 'logout'%}">Logout</a>
+          </li>
+          
           {% endif %}
         </ul>
       </div>

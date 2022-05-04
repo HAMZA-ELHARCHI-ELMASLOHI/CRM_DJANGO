@@ -6,8 +6,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import UserProfile
-from .forms import ProfileModelForm
+from .models import  City
 from django.contrib.auth import get_user_model
 
 
@@ -20,27 +19,21 @@ def home(request):
 
 
 
-# Profile views 
-
-
-class ProfileDetailView(LoginRequiredMixin, generic.DetailView):
-    template_name ='dashboard/profile.html' 
-    context_object_name='userprofile'
-
-    def get_queryset(self):
-        return UserProfile.objects.filter(user=self.request.user)
-
-    
-
-class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
-    template_name = "dashboard/profile-update.html"
-    form_class = ProfileModelForm
-
-    def get_queryset(self):
-        return UserProfile.objects.filter(user=self.request.user)
-
-    def get_success_url(self):
-        return reverse("Dashboard:dash")
 
 
 
+
+
+def pie_chart(request):
+    labels = []
+    data = []
+
+    queryset = City.objects.order_by('-population')[:5]
+    for city in queryset:
+        labels.append(city.name)
+        data.append(city.population)
+
+    return render(request, 'dashboard/pie_chart.html', {
+        'labels': labels,
+        'data': data,
+    })

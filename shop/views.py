@@ -15,12 +15,28 @@ from account.mixins import ManagerRequiredMixin
 from django.http import JsonResponse, FileResponse
 import json
 
+
+
+
+
+class Shop_home(LoginRequiredMixin, generic.TemplateView):
+    template_name = "shop_home.html"
+
+
 class ProductListView(LoginRequiredMixin, generic.ListView):
     template_name = "products/product-list.html"
     
-    def get_queryset(self):
-        return Product.objects.all()
+    def get(self, *args, **kwargs):
+        categorie=Categorie.objects.all()
+        products=Product.objects.all()
+        context = {
+            'categories':categorie,
+            'products':products
+        }
+        return render(self.request, 'products/product-list.html', context)
+    
 
+    
     
 
     context_object_name='products'
@@ -62,15 +78,31 @@ class ProductDeleteView(ManagerRequiredMixin, generic.DeleteView):
         return Product.objects.all()
 
 
+
+
 # Categories
 
-class CategorieListView(ManagerRequiredMixin, generic.ListView):
+class CategorieListView(LoginRequiredMixin, generic.ListView):
     template_name = "categories/categorie-list.html"
     
     def get_queryset(self):
         return Categorie.objects.all()
 
     context_object_name='categories'
+
+
+class CategorieDetailView(LoginRequiredMixin, generic.DetailView):
+    template_name = "categories/categorie-detail.html"
+    
+    def get(self, *args, **kwargs):
+        categorie_id = self.kwargs['pk']
+        categorie=Categorie.objects.get(id=categorie_id)
+        items=Product.objects.filter(categorie=categorie)
+        context = {
+            'categorie':categorie,
+            'items':items
+        }
+        return render(self.request, 'categories/categorie-detail.html', context)
 
 class CategorieCreateView(ManagerRequiredMixin, generic.CreateView):
     template_name = "categories/categorie-create.html"
@@ -80,7 +112,7 @@ class CategorieCreateView(ManagerRequiredMixin, generic.CreateView):
         return reverse("shop:product-create")
 
 
-class CategorieDeleteView(ManagerRequiredMixin, generic.DeleteView):
+class CategorieDeleteView(LoginRequiredMixin, generic.DeleteView):
     template_name = "categories/categorie-delete.html"
     def get_success_url(self):
         return reverse("shop:categorie-create")
@@ -107,7 +139,7 @@ class CartItemsView(generic.ListView):
 class CartView(generic.View):
     def get(self, *args, **kwargs):
         cart=Cart.objects.get(user=self.request.user)
-        items=CartItem.objects.filter(cart=cart)
+        items=CartItem.objects.filter(cart=cart).order_by('-quantity')
         context = {
             'cart': cart,
             'items':items
@@ -123,11 +155,12 @@ class CartView(generic.View):
 
 
 
-def add_to_cart(request, slug):
+def add_to_cart(request, id):
     #print(request)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' :
-        slug = json.load(request)['slug']
-        item = get_object_or_404(Product, slug=slug)
+        id = json.load(request)['id']
+        item = get_object_or_404(Product, id=id)
+        print(item)
         cart=Cart.objects.get(user=request.user)
 
         cart_item, created = CartItem.objects.get_or_create(
@@ -137,13 +170,13 @@ def add_to_cart(request, slug):
         cart_item.quantity= (cart_item.quantity +1)
         cart_item.save()
         #messages.info(request, "This item quantity was updated.")
-        return JsonResponse({'quantity':cart_item.quantity}, status=200, safe=False )
+        return JsonResponse({'quantity':cart_item.quantity, 'price': cart_item.get_total, 'cart_total':cart.get_cart_total}, status=200, safe=False )
 
-def remove_from_cart(request, slug):
+def remove_from_cart(request, id):
     #print(request)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' :
-        slug = json.load(request)['slug']
-        item = get_object_or_404(Product, slug=slug)
+        id = json.load(request)['id']
+        item = get_object_or_404(Product, id=id)
         cart=Cart.objects.get(user=request.user)
 
         cart_item, created = CartItem.objects.get_or_create(
@@ -154,13 +187,13 @@ def remove_from_cart(request, slug):
             cart_item.quantity= (cart_item.quantity -1)
             cart_item.save()
         else:
-            delete_from_cart(request, slug)
+            delete_from_cart(request, id)
         #messages.info(request, "This item quantity was updated.")
-        return JsonResponse({'quantity':cart_item.quantity}, status=200, safe=False )
+        return JsonResponse({'quantity':cart_item.quantity, 'price': cart_item.get_total,'cart_total':cart.get_cart_total}, status=200, safe=False )
 
 
-def delete_from_cart(request, slug):
-    item = get_object_or_404(Product, slug=slug)
+def delete_from_cart(request, id):
+    item = get_object_or_404(Product, id=id)
     print(item)
     cart_item = CartItem.objects.filter(product=item).delete()
     print(cart_item)
@@ -226,6 +259,8 @@ class OrdersCreateView(ManagerRequiredMixin, generic.CreateView):
 
     def get_success_url(self):
         return reverse("shop:order-list")
+
+    
 
 
 class OrdersUpdateView(ManagerRequiredMixin, generic.UpdateView):

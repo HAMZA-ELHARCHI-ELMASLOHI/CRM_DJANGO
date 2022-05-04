@@ -1,22 +1,24 @@
 from django.urls import path
 from .views import (
     CategorieCreateView,  ProductListView, ProductDetailView, ProductCreateView, ProductDeleteView, ProductUpdateView,
-     CategorieDeleteView, CategorieListView, CartItemsView,add_to_cart, delete_from_cart,
+     CategorieDeleteView, CategorieListView, CartItemsView,add_to_cart, delete_from_cart,Shop_home,
     remove_from_cart, CartView, OrdersCreateView, OrdersDeleteView, OrdersDetailView, OrdersListView, OrdersUpdateView
-    ,CreateOrder, pdf
+    ,CreateOrder, pdf, CategorieDetailView
     )
 
 app_name='shop'
 
 urlpatterns = [
+    path('', Shop_home.as_view(), name='shop-home'),
     path('products/', ProductListView.as_view(), name='product-list'),
-    path('product/<slug>/', ProductDetailView.as_view(), name='product-detail'),
+    path('product/<str:pk>/', ProductDetailView.as_view(), name='product-detail'),
     path('products/create/', ProductCreateView.as_view(), name='product-create'),
-    path('products/<int:pk>/delete/', ProductDeleteView.as_view(), name='product-delete'),
-    path('products/<int:pk>/update/', ProductUpdateView.as_view(), name='product-update'),
+    path('products/<str:pk>/delete/', ProductDeleteView.as_view(), name='product-delete'),
+    path('products/<str:pk>/update/', ProductUpdateView.as_view(), name='product-update'),
     
     #categorie
     path('categories/', CategorieListView.as_view(), name='categorie-list'),
+    path('categorie/<str:pk>/', CategorieDetailView.as_view(), name='categorie-detail'),
     path('create-categorie/', CategorieCreateView.as_view(), name='categorie-create'),
     path('<int:pk>/categorie/delete/', CategorieDeleteView.as_view(), name='categorie-delete'),
 
@@ -24,11 +26,11 @@ urlpatterns = [
     #path('cart/', CartItemsView.as_view(), name='cart'),
     path('cart/', CartView.as_view(), name='cart'),
 
-    path('products/add-to-cart/<slug>/', add_to_cart, name='add-to-cart'),
-    path('cart/add-to-cart/<slug>/', add_to_cart, name='add-to-cart'),
-    path('cart/remove-from-cart/<slug>/', remove_from_cart, name='remove-from-cart'),
+    path('products/add-to-cart/<str:id>/', add_to_cart, name='add-to-cart'),
+    path('cart/add-to-cart/<str:id>/', add_to_cart, name='add-to-cart'),
+    path('cart/remove-from-cart/<str:id>/', remove_from_cart, name='remove-from-cart'),
 
-    path('delete-from-cart/<slug>/', delete_from_cart, name='delete-from-cart'),
+    path('delete-from-cart/<str:id>/', delete_from_cart, name='delete-from-cart'),
 
 
     # orders
