@@ -2,6 +2,7 @@ from distutils.command.upload import upload
 from email.policy import default
 from django.db import models
 from account.models import User
+from Dashboard.models import Customer
 from django.db.models.signals import post_save
 import uuid
 from django.shortcuts import reverse
@@ -109,7 +110,7 @@ class Cart(models.Model):
 
 
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='order_user')
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE,default='1')
     name=models.CharField(max_length=50)
     #items=models.ManyToManyField(CartItem)
     total_price= models.DecimalField(max_digits=5, decimal_places=2)
@@ -117,6 +118,7 @@ class Order(models.Model):
     def __str__(self):
             return  self.user.username+str(self.id) + '-order'
 
+    
 
 class Orderitems(models.Model):
     order = models.ForeignKey(Order,
@@ -127,6 +129,12 @@ class Orderitems(models.Model):
     product = models.ForeignKey(Product,related_name='order_items',on_delete=models.DO_NOTHING)
     price = models.DecimalField(max_digits=5, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
+
+    @property
+    def unit_price(self):
+
+        total = self.price/ self.quantity
+        return total 
 
     def __str__(self):
         return str(self.id)

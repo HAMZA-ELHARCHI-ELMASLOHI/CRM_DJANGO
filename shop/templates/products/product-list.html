@@ -36,35 +36,6 @@
 
 </div>
 
-<section class=" bg-gray-100 text-gray-600 body-font">
-  
-  <div class="container px-5 py-24 mx-auto">
-
-    <div class="flex flex-wrap -m-7 ">
-      {% for p in products %}
-
-      <div class="lg:w-1/4 md:w-1/2 p-4 w-full ml-20">
-        <a class="block relative h-48 rounded overflow-hidden">
-          <img alt="ecommerce" class="object-cover object-center w-full h-full block" src="{{ p.product_image.url}}">
-        </a>
-        <div class="mt-4">
-          <h3 class="text-gray-500 text-xs tracking-widest title-font mb-1">{{p.categorie}}</h3>
-          <h2 class="text-gray-900 title-font text-lg font-medium">{{p.name}}</h2>
-          <p class="mt-1">${{p.price}}</p>
-          <a href="{% url 'shop:product-detail' p.id%}"><button class=" mb-5 flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">view</button></a>
-
-        </div>
-        <button data-product="{{p.id}}" data-action="add" class="update-cart flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">add to cart</button>
-
-      </div>
-      {% endfor %}
-
-    </div>
-
-  </div>
-
-</section>
-
 
 
   

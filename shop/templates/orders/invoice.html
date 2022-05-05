@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+</head>
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+}
+</style>
+<body>
+    <div style="margin-left: 250px;">
+        <img src="media/images/logo.jpg" alt="invoice" >
+    </div>
+    <h1>Client: {{customer.name}}</h1>
+
+    <h1>Order Num: {{orders.id}}    </h1>
+    <table>
+        <tr>
+          <th>Name</th>
+          <th>quantity</th>
+          <th>Price</th>
+          <th>Total Price</th>
+
+        </tr>
+        {% for i in items %}
+
+        <tr>
+          <td>{{i.name}}</td>
+          <td>{{i.quantity}}</td>
+          <td>{{i.unit_price}}</td>
+          <td>{{i.price}}</td>
+
+        </tr>
+        {% endfor %}
+
+      </table>
+      <hr>
+     <h1>Total Price: {{orders.total_price}}</h1> 
+
+</body>
+</html>

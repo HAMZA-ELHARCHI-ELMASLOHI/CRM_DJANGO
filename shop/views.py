@@ -15,7 +15,12 @@ from account.mixins import ManagerRequiredMixin
 from django.http import JsonResponse, FileResponse
 import json
 
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.conf import settings
+from django.http import HttpResponse
 
+from Dashboard.models import Customer
 
 
 
@@ -203,15 +208,23 @@ def delete_from_cart(request, id):
 
 #Orders
 
-class OrdersListView(LoginRequiredMixin, generic.ListView):
-    template_name = "orders/order-list.html"
+class OrdersListView(generic.View):
     
-    def get_queryset(self):
-        return Order.objects.filter(user=self.request.user)
+    def get(self, *args, **kwargs):
+        customer =Customer.objects.get(user=self.request.user)
+        orders=Order.objects.filter(customer=customer)
+
+        context = {
+            'orders': orders,
+            'customer':customer
+        }
+        return render(self.request, 'orders/order-list.html', context)
 
     
 
-    context_object_name='orders'
+
+
+
 
 class OrdersDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = "orders/order-detail.html"
@@ -236,13 +249,15 @@ class CreateOrder(generic.View):
     def get(self, *args, **kwargs):
         cart=Cart.objects.get(user=self.request.user)
         items=CartItem.objects.filter(cart=cart)
+        customer =Customer.objects.get(user=self.request.user)
+
         total_price=cart.get_cart_total
         context = {
             'items':items
         }
         order, created = Order.objects.get_or_create(
                 name=self.__str__() ,
-                user=self.request.user,
+                customer=customer,
                 total_price=total_price
             )
         
@@ -298,3 +313,31 @@ class pdf(LoginRequiredMixin, generic.DetailView):
 
         buffer.seek(0)
         return FileResponse(buffer, as_attachment=True, filename='hello.pdf')
+
+
+def render_pdf_view(request, *args, **kwargs):
+    order_id = kwargs['pk']
+    order=Order.objects.get(id=order_id)
+    items=Orderitems.objects.filter(order=order)
+    customer =Customer.objects.get(user=request.user)
+
+    template_path = 'orders/invoice.html'
+    context = {'orders': order, 'items':items, 'customer':customer}
+    # Create a Django response object, and specify content_type as pdf
+    response = HttpResponse(content_type='application/pdf')
+    #download
+    #response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+    #display
+    response['Content-Disposition'] = 'filename="report.pdf"'
+
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+       html, dest=response)
+    # if error then show some funny view
+    if pisa_status.err:
+       return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response

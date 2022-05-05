@@ -3,7 +3,7 @@ from .views import (
     CategorieCreateView,  ProductListView, ProductDetailView, ProductCreateView, ProductDeleteView, ProductUpdateView,
      CategorieDeleteView, CategorieListView, CartItemsView,add_to_cart, delete_from_cart,Shop_home,
     remove_from_cart, CartView, OrdersCreateView, OrdersDeleteView, OrdersDetailView, OrdersListView, OrdersUpdateView
-    ,CreateOrder, pdf, CategorieDetailView
+    ,CreateOrder, pdf, CategorieDetailView, render_pdf_view
     )
 
 app_name='shop'
@@ -42,6 +42,6 @@ urlpatterns = [
 
     #order pdf invoice
 
-    path('order/invoice/<int:pk>', pdf.as_view(), name='order-invoice')
+    path('order/invoice/<int:pk>', render_pdf_view, name='order-invoice')
 
 ]
