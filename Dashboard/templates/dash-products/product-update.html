@@ -1,7 +1,7 @@
-{% extends 'shop_home.html' %}
+{% extends 'dashboard/dash-base.html' %}
 
 
-{% block content %}
+{% block dash %}
 update
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
@@ -9,4 +9,4 @@ update
         <button > Submit </button>
     </form>
     
-{% endblock content %}
+{% endblock dash %}

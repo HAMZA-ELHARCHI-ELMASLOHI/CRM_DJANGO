@@ -124,7 +124,7 @@ class Orderitems(models.Model):
                               on_delete=models.CASCADE)
 
     name=models.CharField(max_length=50)
-    product = models.ForeignKey(Product,related_name='order_items',on_delete=models.CASCADE)
+    product = models.ForeignKey(Product,related_name='order_items',on_delete=models.DO_NOTHING)
     price = models.DecimalField(max_digits=5, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
 

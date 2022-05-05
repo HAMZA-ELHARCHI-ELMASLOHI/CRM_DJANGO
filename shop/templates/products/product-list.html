@@ -1,17 +1,14 @@
-{% extends 'account/home_page.html' %}
+{% extends 'shop_home.html' %}
 {% load static %}
 
 {% block content %}
 
-{% if request.user.is_manager%}
 
-<a href="{% url 'shop:product-create'%}">Create product</a><br>
-{% endif %}
 
 {% for c in categories %}
 
     {{c.name}}
-    <a href="{% url 'shop:categorie-delete' c.pk%}"> delete</a>
+    <a href="{% url 'dashboard:categorie-delete' c.pk%}"> delete</a>
     <a href="{% url 'shop:categorie-detail' c.pk%}"> view</a>
 
     <br>
@@ -21,8 +18,8 @@
   {% for p in products %}
 
   <div class="col">
-    <div class="card h-100 " style="width: 25em;">
-      <img src="{{ p.product_image.url}}" class="card-img-top h-100 w-100" >
+    <div class="card h-100 " style="width: 25em; border-radius: 20px;">
+      <img src="{{ p.product_image.url}}" class="card-img-top h-100 w-100" style="border-radius: 20px;" >
       <div class="card-body">
         <h5 class="card-title">{{p.name}}</h5>
         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>

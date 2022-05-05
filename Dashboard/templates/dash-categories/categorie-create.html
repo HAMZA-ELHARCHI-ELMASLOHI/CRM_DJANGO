@@ -1,9 +1,8 @@
-{% extends 'shop_home.html' %}
+{% extends 'account/home_page.html' %}
 
 
 {% block content %}
     <form method="POST">
-        are you sure want to delete 
         {% csrf_token %}
         {{form}}
         <button > Submit </button>

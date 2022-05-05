@@ -6,7 +6,7 @@ from account.models import User
 # Create your models here.
 
 
-
+    
 
 class Country(models.Model):
     name = models.CharField(max_length=30)
