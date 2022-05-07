@@ -1,7 +1,7 @@
-{% extends 'account/home_page.html' %}
+{% extends 'dashboard/dash-base.html' %}
 
 
-{% block content %}
+{% block dash %}
     <form method="POST">
         are you sure want to delete 
         {% csrf_token %}
@@ -9,4 +9,4 @@
         <button > Submit </button>
     </form>
     
-{% endblock content %}
+{% endblock dash %}

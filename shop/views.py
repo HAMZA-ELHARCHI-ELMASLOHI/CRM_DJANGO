@@ -4,14 +4,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Categorie, Product, Cart, CartItem, Order, Orderitems
 from .forms import ProductModelForm, CategorieModelForm, OrderModelForm
 
-import io
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.pagesizes import landscape
-from reportlab.platypus import Image
 # Product views
 
-from account.mixins import ManagerRequiredMixin
+from account.mixins import ManagerRequiredMixin, CustomerRequiredMixin
 from django.http import JsonResponse, FileResponse
 import json
 
@@ -133,7 +128,8 @@ class CartItemsView(generic.ListView):
     model = CartItem
     context_object_name='items'
     def get_queryset(self):
-        cart=Cart.objects.get(user=self.request.user)
+        customer=Customer.objects.get(user=request.user)
+        cart=Cart.objects.get(customer=customer)
         #price=cart.get_cart_total
 
         return CartItem.objects.filter(user=self.request.user)
@@ -141,9 +137,11 @@ class CartItemsView(generic.ListView):
 
     template_name='cart/cart.html'
 
-class CartView(generic.View):
+class CartView(CustomerRequiredMixin, generic.View):
     def get(self, *args, **kwargs):
-        cart=Cart.objects.get(user=self.request.user)
+
+        customer=Customer.objects.get(user=self.request.user)
+        cart=Cart.objects.get(customer=customer)
         items=CartItem.objects.filter(cart=cart).order_by('-quantity')
         context = {
             'cart': cart,
@@ -166,7 +164,8 @@ def add_to_cart(request, id):
         id = json.load(request)['id']
         item = get_object_or_404(Product, id=id)
         print(item)
-        cart=Cart.objects.get(user=request.user)
+        customer=Customer.objects.get(user=request.user)
+        cart=Cart.objects.get(customer=customer)
 
         cart_item, created = CartItem.objects.get_or_create(
                 product=item,
@@ -177,12 +176,13 @@ def add_to_cart(request, id):
         #messages.info(request, "This item quantity was updated.")
         return JsonResponse({'quantity':cart_item.quantity, 'price': cart_item.get_total, 'cart_total':cart.get_cart_total}, status=200, safe=False )
 
-def remove_from_cart(request, id):
+def remove_from_cart(self, id):
     #print(request)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' :
         id = json.load(request)['id']
         item = get_object_or_404(Product, id=id)
-        cart=Cart.objects.get(user=request.user)
+        customer=Customer.objects.get(user=request.user)
+        cart=Cart.objects.get(customer=customer)
 
         cart_item, created = CartItem.objects.get_or_create(
                 product=item,
@@ -244,19 +244,17 @@ class OrdersDetailView(LoginRequiredMixin, generic.DetailView):
 
 
 
-
-class CreateOrder(generic.View):
+class CreateOrder(CustomerRequiredMixin, generic.View):
     def get(self, *args, **kwargs):
-        cart=Cart.objects.get(user=self.request.user)
+        customer=Customer.objects.get(user=self.request.user)
+        cart=Cart.objects.get(customer=customer)
         items=CartItem.objects.filter(cart=cart)
-        customer =Customer.objects.get(user=self.request.user)
 
         total_price=cart.get_cart_total
         context = {
             'items':items
         }
         order, created = Order.objects.get_or_create(
-                name=self.__str__() ,
                 customer=customer,
                 total_price=total_price
             )

@@ -1,26 +1,21 @@
 {% extends 'dashboard/dash-base.html' %}
 {% load static %}
 
+##########
+{% block url %}<a href="{% url 'dashboard:product-create'%}"><button class="btn btn-primary">Create New Product</button></a><br>{% endblock url %}
+{% block type %}Products {% endblock type %}
+{% block title %}Products {% endblock title %}
+##########
 {% block dash %}
 
 {% if request.user.is_manager%}
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-  <h1 class="h2">Products</h1>
-  <div class="btn-toolbar mb-2 mb-md-0">
-    <div class="btn-group me-2">
-      <a href="{% url 'dashboard:product-create'%}"><button class="btn btn-primary">Create New Product</button></a><br>
-    </div>
-  </div>
-</div>
-
-
 {% endif %}
 
 {% for c in categories %}
 
     {{c.name}}
     <a href="{% url 'dashboard:categorie-delete' c.pk%}"> delete</a>
-    <a href="{% url 'shop:categorie-detail' c.pk%}"> view</a>
+    <a href="{% url 'dashboard:categorie-detail' c.pk%}"> view</a>
 
     <br>
 {% endfor %}
@@ -32,7 +27,7 @@
     <div class="card h-100 " style="width: 25em;">
       <img src="{{ p.product_image.url}}" class="card-img-top h-100 w-100" >
       <div class="card-body">
-        <h5 class="card-title">{{p.name}}</h5>
+        <h5 class="card-title">{{p.name}}</h5> ${{p.price}}
         <p class="card-text">{{p.description}}</p>
 
         <a href="{% url 'shop:product-detail' p.id %}"><button class="btn btn-primary">view</button></a>
@@ -47,13 +42,6 @@
   {% endfor %}
 
 </div>
-
-
-
-
-
-  
-
 
 
 

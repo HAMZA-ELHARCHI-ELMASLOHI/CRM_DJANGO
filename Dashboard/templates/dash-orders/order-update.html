@@ -1,0 +1,15 @@
+{% extends 'dashboard/dash-base.html' %}
+
+
+{% block dash %}
+    <form method="POST">
+        update <br>
+        {% csrf_token %}
+        {{form}}
+        <button class="btn btn-danger"> confirm </button>
+    </form>
+    <br>
+    <a href="{% url 'dashboard:order-list'%}"><button class="btn btn-primary">No ,back to Orders </button></a>
+
+    
+{% endblock dash %}

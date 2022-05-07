@@ -1,0 +1,18 @@
+{% if messages %}
+    {% for message in messages %}
+        <div id="alerttime" class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+        <strong>Product</strong> {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<script>
+    let elm= document.getElementById('alerttime');
+    setTimeout(function(){
+        console.log('time')
+      elm.remove()
+    }, 2000)
+  
+  </script>
+  

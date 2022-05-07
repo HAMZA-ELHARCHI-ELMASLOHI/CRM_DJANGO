@@ -52,7 +52,8 @@ class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
     cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
-    #user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
 
     @property
     def get_total(self):
@@ -67,9 +68,12 @@ class CartItem(models.Model):
     
     
 class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    #created_at = models.DateTimeField(auto_now_add=True)
+    customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
+    #created = models.DateTimeField(auto_now_add=True)
     #items = models.ManyToManyField(CartItem)
+    updated=models.DateTimeField(auto_now=True)
+
+    
 
     def get_add_to_cart_url(self):
         return reverse("shop:add-to-cart", kwargs={
@@ -86,7 +90,8 @@ class Cart(models.Model):
 
     @property
     def get_cart_total(self):
-        cart=Cart.objects.get(user=self.user)
+        #customer=Customer.objects.get(user=self.user)
+        cart=Cart.objects.get(customer=self.customer)
 
         orderitems = CartItem.objects.filter(cart=cart)
         total = sum([item.get_total for item in orderitems])
@@ -94,14 +99,17 @@ class Cart(models.Model):
 
     @property
     def get_total_items(self):
-        cart=Cart.objects.get(user=self.user)
-
+        #customer=Customer.objects.get(user=self.user)
+        cart=Cart.objects.get(customer=self.customer)
         orderitems = CartItem.objects.filter(cart=cart)
         total = sum([item.quantity for item in orderitems])
         return total 
 
+
+    
+
     def __str__(self):
-            return  self.user.username + '-cart'
+            return  self.customer.name + '-cart'
 
 
 
@@ -112,11 +120,16 @@ class Cart(models.Model):
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,default='1')
     name=models.CharField(max_length=50)
-    #items=models.ManyToManyField(CartItem)
+    is_confirmed=models.BooleanField(default=False)
     total_price= models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-            return  self.user.username+str(self.id) + '-order'
+       return f" {self.customer.name} Order {self.id} "
+
+    def save(self, *args, **kwargs):
+        self.name=f"sdf"
+        super().save(*args, **kwargs)
+   
 
     
 
@@ -143,10 +156,10 @@ class Orderitems(models.Model):
 
 def post_user_created_signal(sender, instance, created, **kwargs):
     if created:
-        Cart.objects.create(user=instance)
+        Cart.objects.create(customer=instance)
 
 
-post_save.connect(post_user_created_signal, sender=User) 
+post_save.connect(post_user_created_signal, sender=Customer) 
 
 
 def order_created_signal(sender, instance, created, **kwargs):

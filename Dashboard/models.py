@@ -17,13 +17,10 @@ class Manager(models.Model):
     name=models.CharField(max_length=20, null=True)
     email=models.EmailField(null=True)
 
-class Country(models.Model):
-    name = models.CharField(max_length=30)
-
-class City(models.Model):
-    name = models.CharField(max_length=30)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
-    population = models.PositiveIntegerField()
+class Csv(models.Model):
+    file_name=models.FileField(upload_to='csvs')
+    uploaded=models.DateTimeField(auto_now_add=True)
+    activated=models.DateTimeField(auto_now=True)
 
 
 def post_user_created_signal(sender, instance, created, **kwargs):

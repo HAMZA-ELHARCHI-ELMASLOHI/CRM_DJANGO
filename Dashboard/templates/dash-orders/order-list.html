@@ -1,7 +1,16 @@
-{% extends 'shop_home.html' %}
+{% extends 'dashboard/dash-base.html' %}
 {% load static %}
 
-{% block content %}
+{% block url %}<a href="{% url 'dashboard:order-list'%}"><button class="btn btn-primary">Create Order</button></a><br>{% endblock url %}
+{% block type %}Orders {% endblock type %}
+{% block title %}Orders {% endblock title %}
+
+{% block dash %}
+
+{% if request.user.is_manager%}
+
+
+{% endif %}
 
 <section class="ml-5">
     <table class="table align-middle mb-0 bg-white">
@@ -27,12 +36,12 @@
                     />
                 <div class="ms-3">
                 <p class="fw-bold mb-1">{{o.name}}</p>
-                <p class="text-muted mb-0">john.doe@gmail.com</p>
+                <p class="text-muted mb-0">ss</p>
                 </div>
             </div>
             </td>
             <td>
-            <p class="fw-normal mb-1 ">Software engineer</p>
+            <p class="fw-normal mb-1 ">{{o.customer.name}}</p>
             <p class="text-muted mb-0">IT department</p>
             </td>
             <td>
@@ -40,10 +49,10 @@
             </td>
             <td>Senior</td>
             <td>
-                <a href="{% url 'shop:order-detail' o.pk %}">
-            <button type="button" class="btn btn-link btn-sm btn-rounded">
-                view
-            </button>
+            <a href="{% url 'dashboard:order-detail' o.pk %}">
+                <button type="button" class="btn btn-link btn-sm btn-rounded">
+                    view
+                </button>
             </a>
 
             </td>
@@ -53,7 +62,11 @@
     </table>
   </section>
 
-{% endblock content %}
+
+
+
+{% endblock dash %}
+
 
 
   <section class="text-gray-600 body-font overflow-hidden bg-red-100 ">

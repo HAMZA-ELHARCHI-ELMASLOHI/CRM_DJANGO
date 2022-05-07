@@ -6,7 +6,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CustomUserCreationForm, ProfileModelForm
 from .models import UserProfile
 
-
 # Create your views here.
 
 def home_page(request):

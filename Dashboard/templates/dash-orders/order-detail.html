@@ -1,17 +1,14 @@
-{% extends 'shop_home.html' %}
+{% extends 'dashboard/dash-base.html' %}
 {% load static %}
 
-{% block content %}
+{% block dash %}
 
 
 
     {{orders.name}}
     {{orders.total_price}}
 
-    <a href="{% url 'shop:order-delete' orders.pk%}"> delete</a>
-    <a href="{% url 'shop:order-update' orders.pk%}"> update</a>
     
-    <a href="{% url 'shop:order-invoice' orders.id  %}">pdf</a>
 
     
     {% for i in items %}
@@ -23,7 +20,13 @@
 
     <br>
 
-<a href="{% url 'shop:order-list'%}">back</a>
+<a href="{% url 'dashboard:order-list'%}">back</a>
 
-{% endblock content %}
+<a href="{% url 'dashboard:order-update' orders.pk %}">
+    <button type="button" class="btn btn-link btn-sm btn-rounded">
+        update
+    </button>
+</a>
+
+{% endblock dash %}
 

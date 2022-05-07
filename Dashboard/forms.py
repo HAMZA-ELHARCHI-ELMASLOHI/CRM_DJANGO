@@ -1,5 +1,6 @@
 from django import forms
 from shop.models import Product, Order, Categorie, Orderitems
+from .models import Csv
 
 class ProductModelForm(forms.ModelForm):
     class Meta:
@@ -23,7 +24,15 @@ class CategorieModelForm(forms.ModelForm):
 
 class OrderModelForm(forms.ModelForm):
     class Meta:
-        model = Orderitems
+        model = Order
         fields = (
-            'product',
+            'is_confirmed',
+        )
+
+
+class CsvModelForm(forms.ModelForm):
+    class Meta:
+        model = Csv
+        fields = (
+            'file_name',
         )

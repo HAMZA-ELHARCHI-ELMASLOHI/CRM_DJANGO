@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{% block title %}{% endblock title %}  </title>
 </head>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -38,9 +38,9 @@
              <li> <a href="{% url 'dashboard:pie-chart' %}" class="nav-link text-white"> <i class="fa fa-dashboard"></i><span class="ms-2">Chart</span> </a> </li> 
              <li> <a href="{% url 'dashboard:product-list' %}" class="nav-link text-white"> <i class="fa fa-first-order"></i><span class="ms-2">Producs</span> </a> </li> 
              <li> <a href="{% url 'shop:categorie-list' %}" class="nav-link text-white"> <i class="fa fa-cog"></i><span class="ms-2">Categories</span> </a> </li> 
-             <li> <a href="{% url 'shop:order-list' %}" class="nav-link text-white"> <i class="fa fa-bookmark"></i><span class="ms-2">Orders</span> </a> 
-               
-            </li> 
+             <li> <a href="{% url 'dashboard:order-list' %}" class="nav-link text-white"> <i class="fa fa-bookmark"></i><span class="ms-2">Orders</span> </a> </li> 
+             <li> <a href="{% url 'dashboard:customer-list' %}" class="nav-link text-white"> <i class="fa fa-bookmark"></i><span class="ms-2">Cutomers</span> </a> </li> 
+
          </ul> <hr> 
          <div class="dropdown"> 
             <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false"> 
@@ -53,6 +53,17 @@
       </div>
       </div>
       <div style=" margin-left: 260px; height: 100%;">
+
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">{% block type %} {% endblock type %}</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group me-2">
+                {% block url %} {% endblock url %}
+              </div>
+            </div>
+          </div>
+          
+        {% include 'messages.html' %}
          {% block dash %}
 
          {% endblock dash %}
