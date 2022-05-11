@@ -1,0 +1,58 @@
+{% extends 'dashboard/dash-base.html' %}
+
+{% block dash %}
+<div class="row row-cols-1  row-cols-md-3 g-4" style="margin-left: 10px;">
+
+          
+    <div class="col" style="border-radius: 50px;">
+      <div class="card h-100 " style="width: 25em;">
+        <div class="card-body">
+          <h1 class="card-title">Confirmed Orders</h5>
+            <hr>
+          <h3 class="card-text">{{orders}}</h3>
+  
+          <a href="{% url 'dashboard:order-list'%}"><button class="btn btn-primary">view</button></a>
+          
+        </div>
+      </div>
+    </div>
+    <div class="col" style="border-radius: 50px;">
+        <div class="card h-100 " style="width: 25em;">
+          <div class="card-body">
+            <h1 class="card-title">Total Categories</h5>
+              <hr>
+            <h3 class="card-text">{{categories}}</h3>
+    
+            <a href="#"><button class="btn btn-primary">view</button></a>
+            
+          </div>
+        </div>
+      </div>
+      <div class="col" style="border-radius: 50px;">
+        <div class="card h-100 " style="width: 25em;">
+          <div class="card-body">
+            <h1 class="card-title">Total Products</h5>
+              <hr>
+            <h3 class="card-text">{{products}}</h3>
+    
+            <a href="#"><button class="btn btn-primary">view</button></a>
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="col" style="border-radius: 50px;">
+        <div class="card h-100 " style="width: 25em;">
+          <div class="card-body">
+            <h1 class="card-title">Total Customers</h5>
+              <hr>
+            <h3 class="card-text">{{customers}}</h3>
+    
+            <a href="#"><button class="btn btn-primary">view</button></a>
+            
+          </div>
+        </div>
+      </div>
+  
+  </div>
+{% endblock dash %}

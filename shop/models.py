@@ -3,10 +3,12 @@ from email.policy import default
 from django.db import models
 from account.models import User
 from Dashboard.models import Customer
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 import uuid
 from django.shortcuts import reverse
 from django.core.mail import send_mail
+from django.utils import timezone
+
 # Create your models here.
 
 class Product(models.Model):
@@ -69,8 +71,7 @@ class CartItem(models.Model):
     
 class Cart(models.Model):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
-    #created = models.DateTimeField(auto_now_add=True)
-    #items = models.ManyToManyField(CartItem)
+    created = models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(auto_now=True)
 
     
@@ -112,22 +113,29 @@ class Cart(models.Model):
             return  self.customer.name + '-cart'
 
 
-
 	    
-
 
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,default='1')
     name=models.CharField(max_length=50)
+    created=models.DateTimeField(auto_now_add=True)
+    updated=models.DateTimeField(auto_now=True)
+    Adresse=models.CharField(max_length=200)
+    zipcode=models.IntegerField(default=0)
     is_confirmed=models.BooleanField(default=False)
     total_price= models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
        return f" {self.customer.name} Order {self.id} "
 
+    @property
+    def get_total_order(self):
+        total=Order.objects.all().count()
+        return total 
+
     def save(self, *args, **kwargs):
-        self.name=f"sdf"
+        self.name=self.__str__()
         super().save(*args, **kwargs)
    
 
@@ -154,13 +162,19 @@ class Orderitems(models.Model):
 
 
 
-def post_user_created_signal(sender, instance, created, **kwargs):
+def post_customer_created_signal(sender, instance, created, **kwargs):
     if created:
         Cart.objects.create(customer=instance)
 
 
-post_save.connect(post_user_created_signal, sender=Customer) 
+post_save.connect(post_customer_created_signal, sender=Customer) 
 
+
+def post_customer_deleted_signal(sender, instance, **kwargs):
+        Cart.objects.filter(customer=instance).delete()
+
+
+post_delete.connect(post_customer_deleted_signal, sender=Customer) 
 
 def order_created_signal(sender, instance, created, **kwargs):
     if created:
@@ -169,3 +183,6 @@ def order_created_signal(sender, instance, created, **kwargs):
 
 
 post_save.connect(order_created_signal, sender=Order) 
+
+class Notification(models.Model):
+    message=models.TextField()

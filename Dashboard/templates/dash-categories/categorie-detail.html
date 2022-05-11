@@ -1,25 +1,36 @@
 {% extends 'dashboard/dash-base.html' %}
 {% load static %}
 
+{% block url %}<a href="{% url 'dashboard:categorie-list'%}"><button class="btn btn-primary">All Categories</button></a><br>{% endblock url %}
+{% block type %}Categories {% endblock type %}
+{% block title %}Categories Create {% endblock title %}
 {% block dash %}
 
 
-<section class=" bg-gray-100 text-gray-600 body-font">
+<h3>{{categorie.name}}</h3>
+<div class="row row-cols-1  row-cols-md-4 g-4" style="margin-left: 10px;">
 
-  <div class="container px-5 py-24 mx-auto">
+  {% for p in items %}
 
-    <div class="flex flex-wrap -m-7 ">
-      {% for p in items %}
+  <div class="col" style="border-radius: 50px;">
+    <div class="card h-100 " style="width: 25em;">
+      <img src="{{ p.product_image.url}}" class="card-img-top h-100 w-100" >
+      <div class="card-body">
+        <h5 class="card-title">{{p.name}}</h5> ${{p.price}}
+        <p class="card-text">{{p.description}}</p>
 
-        <a class="block relative h-48 rounded overflow-hidden">
-          <img alt="ecommerce" class="object-cover object-center w-full h-full block" src="{{ p.product_image.url}}">
-        </a>
-        
-          <h3 class="text-gray-500 text-xs tracking-widest title-font mb-1">{{p.categorie}}</h3>
-          <h2 class="text-gray-900 title-font text-lg font-medium">{{p.name}}</h2>
-          <p class="mt-1">${{p.price}}</p>
-          
-      {% endfor %}
+        <a href="{% url 'shop:product-detail' p.id %}"><button class="btn btn-primary">view</button></a>
+        <a href="{% url 'dashboard:product-update' p.id %}"><button class="btn btn-secondary">update</button></a>
+        <a href="{% url 'dashboard:product-delete' p.id %}"><button class="btn btn-danger">delete</button></a>
+
+      </div>
+
+    </div>
+  </div>
+
+  {% endfor %}
+
+</div>
 
 
 

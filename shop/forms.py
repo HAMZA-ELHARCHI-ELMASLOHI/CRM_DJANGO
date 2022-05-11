@@ -24,7 +24,21 @@ class CategorieModelForm(forms.ModelForm):
 
 class OrderModelForm(forms.ModelForm):
     class Meta:
-        model = Orderitems
+        model = Order
         fields = (
-            'product',
+            'Adresse',
+            'zipcode'
         )
+
+    
+'''class OrderForm(forms.Form):
+    class Meta:
+        model = Order
+        fields = (
+            'Adresse',
+            'zipcode'
+        )'''
+
+class OrderForm(forms.Form):
+    Adresse = forms.CharField(label='adresse ', max_length=100)
+    zipcode =forms.IntegerField(label='Zip code')

@@ -8,7 +8,6 @@
 {% for c in categories %}
 
     {{c.name}}
-    <a href="{% url 'dashboard:categorie-delete' c.pk%}"> delete</a>
     <a href="{% url 'shop:categorie-detail' c.pk%}"> view</a>
 
     <br>

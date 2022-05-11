@@ -1,11 +1,26 @@
+{% extends 'dashboard/dash-base.html' %}
+{% load static %}
 
+##########
+{% block url %}<a href="{% url 'dashboard:categorie-create'%}"><button class="btn btn-primary">Create New Categorie</button></a><br>{% endblock url %}
+{% block type %}Categories {% endblock type %}
+{% block title %}Categories {% endblock title %}
+##########
+{% block dash %}
+<section class="h-100" >
+    <div class="container h-100" style="width: 600px; margin-top: 100px;  border-radius: 15px; padding: 30px; background-color: rgb(245, 244, 244);">
+        {% for c in categories %}
 
-dd
-{% for c in categories %}
+         <h1>{{c.name}}</h1>
 
-    {{c.name}}
-    <a href="{% url 'shop:categorie-delete' c.pk%}"> delete</a>
-    <a href="{% url 'shop:categorie-detail' c.pk%}"> view</a>
+        <a href="{% url 'dashboard:categorie-delete' c.pk%}"> <button class="btn btn-danger">delete</button></a>
+        <a href="{% url 'dashboard:categorie-detail' c.pk%}"> <button class="btn btn-primary">view</button></a>
+    
+        <br>
+    {% endfor %}        
+          
+    </div>
+</section>
 
-    <br>
-{% endfor %}
+{% endblock dash %}
+

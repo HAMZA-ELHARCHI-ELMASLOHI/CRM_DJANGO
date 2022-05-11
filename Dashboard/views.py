@@ -7,9 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from account.mixins import ManagerRequiredMixin
-from .models import   Customer, Manager
+from .models import   Customer, Manager, Csv
 from django.contrib.auth import get_user_model
-from .forms import ProductModelForm, CategorieModelForm, OrderModelForm
+from .forms import ProductModelForm, CategorieModelForm, OrderModelForm, CsvModelForm
 from shop.models import Product, Order, Categorie, Orderitems
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
@@ -17,13 +17,42 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 
+import csv
 #User=get_user_model()
 # Create your views here.
 
 
 
-class Home(ManagerRequiredMixin, generic.TemplateView):
-    template_name='dashboard/dash-base.html'
+class Home(ManagerRequiredMixin, generic.View):
+    template_name='dashboard/home.html'
+    def get(self, *args, **kwargs):
+        categorie=Categorie.objects.count()
+        products=Product.objects.count()
+        orders=Order.objects.filter(is_confirmed=True).count()
+        customers=Customer.objects.count()
+        context = {
+            'categories':categorie,
+            'products':products,
+            'orders':orders,
+            'customers':customers
+        }
+        return render(self.request, 'dashboard/home.html', context)
+
+class StatisticView(ManagerRequiredMixin, generic.View):
+    template_name = "dash-products/home.html"
+    
+    def get(self, *args, **kwargs):
+        categorie=Categorie.objects.count()
+        products=Product.objects.count()
+        orders=Order.objects.count()
+        context = {
+            'categories':categorie,
+            'products':products,
+            'orders':orders
+        }
+        
+        return render(self.request, 'dash-products/home.html', context)
+
 
 class Pie_chart(ManagerRequiredMixin, generic.View):
     def get(self,request):
@@ -111,20 +140,30 @@ class ProductDeleteView(ManagerRequiredMixin, generic.DeleteView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
+class CategorieListView(LoginRequiredMixin, generic.ListView):
+    template_name = "dash-categories/categorie-list.html"
+    
+    def get_queryset(self):
+        return Categorie.objects.all()
+
+    context_object_name='categories'
+
 class CategorieCreateView(ManagerRequiredMixin, generic.CreateView):
     template_name = "dash-categories/categorie-create.html"
     form_class = CategorieModelForm
 
-    def get_success_url(self)  :
-        return reverse("dashboard:product-create")
+    def get_success_url(self):
+        return reverse("dashboard:categorie-list")
 
 
 class CategorieDeleteView(ManagerRequiredMixin, generic.DeleteView):
     template_name = "dash-categories/categorie-delete.html"
     def get_success_url(self):
-        return reverse("dashboard:categorie-create")
+        return reverse("dashboard:categorie-list")
     def get_queryset(self):
         return Categorie.objects.all()
+
+
 
 class CategorieDetailView(ManagerRequiredMixin, generic.DetailView):
     template_name = "dash-categories/categorie-detail.html"
@@ -139,11 +178,11 @@ class CategorieDetailView(ManagerRequiredMixin, generic.DetailView):
         }
         return render(self.request, 'dash-categories/categorie-detail.html', context)
 
-class OrderListView(ManagerRequiredMixin, generic.ListView):
+class OrderListView(ManagerRequiredMixin, generic.View):
     
     def get(self, *args, **kwargs):
         customer =Customer.objects.get(user=self.request.user)
-        orders=Order.objects.filter(customer=customer)
+        orders=Order.objects.all()
 
         context = {
             'orders': orders,
@@ -240,4 +279,18 @@ class CustomerDetailView(ManagerRequiredMixin, generic.DetailView):
 
 
 def upload_csv(request):
-    pass
+    form= CsvModelForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        form.save()
+        form=CsvModelForm()
+        obj=Csv.objects.all().first()
+        with open(obj.file_name.path, 'r') as f:
+            reader=csv.reader(f)
+            for i, row in enumerate(reader):
+                if(i==0):
+                    pass
+                else:
+                    print(row)
+                print(row)
+        #Product.objects.create(name=name)
+    return render(request, 'dashboard/upload_csv.html', {'form': form})

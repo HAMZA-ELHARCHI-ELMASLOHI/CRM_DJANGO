@@ -3,6 +3,7 @@ from django.shortcuts import render, reverse
 from django.http import HttpResponse
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 from .forms import CustomUserCreationForm, ProfileModelForm
 from .models import UserProfile
 
@@ -41,3 +42,4 @@ class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
 
     def get_success_url(self):
         return reverse("shop:product-list")
+

@@ -6,12 +6,47 @@
 {% block dash %}
 
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{form}}
-        <button > Submit </button>
-    </form>
-    <a href="{% url 'dashboard:categorie-create' %}"> Add Categorie </a>
+    <section class="h-100" >
+        <div class="container h-100" style="width: 600px; margin-top: 100px;  border-radius: 15px; padding: 30px; background-color: rgb(245, 244, 244);">
+            <h1>Create Product</h1>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %} 
+    
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" name="name" class="form-control"  placeholder="Enter username">
+                </div>
+                  
+                <div class="form-group">
+                    <label >Product Image</label>
+                    <input type="file" name="product_image" class="form-control"  placeholder="Enter product image">
+                </div>     
+                
+                <div class="form-group">
+                    <label >Description</label>
+                    <textarea  type="text" name="description" cols="20" rows="10" class="form-control"  placeholder="Enter zip code"></textarea>
+                </div>   
+                <div class="form-group">
+                    <label >Categorie</label><br>
+
+                    {{form.categorie}} 
+                    <a href="{% url 'dashboard:categorie-create' %}">
+                        <button type="button" class="btn btn-secondary">add new Categorie</button> 
+                    </a>
+
+                </div>   
+                <div class="form-group">
+                    <label>Price</label>
+                    <input type="number" name="price" class="form-control"  placeholder="Enter price">
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Submit</button>
+    
+              </form>
+              
+        </div>
+    </section>
+
+    
     <a href="{% url 'shop:categorie-list' %}"> Categories </a>
 
 

@@ -18,7 +18,7 @@
         <thead class="bg-light">
         <tr>
             <th>Name</th>
-            <th>Title</th>
+            <th>Email</th>
             <th>Status</th>
             <th>Position</th>
             <th>Actions</th>
@@ -37,13 +37,13 @@
                     />
                 <div class="ms-3">
                 <p class="fw-bold mb-1">{{c.name}}</p>
-                <p class="text-muted mb-0">{{c.email}}</p>
+                <p class="text-muted mb-0"></p>
+
                 </div>
             </div>
             </td>
             <td>
-            <p class="fw-normal mb-1 ">Software engineer</p>
-            <p class="text-muted mb-0">IT department</p>
+            <p class="fw-bold mb-1">{{c.email}}</p>
             </td>
             <td>
                 <span class="badge rounded-pill bg-success">Success</span>

@@ -18,13 +18,14 @@
         <tr>
             <th>Name</th>
             <th>Title</th>
-            <th>Status</th>
-            <th>Position</th>
+            <th>Confirmed</th>
+            <th>Price</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
             {% for o in orders %}
+
                 <tr>
             <td>
             <div class="d-flex align-items-center">
@@ -36,18 +37,26 @@
                     />
                 <div class="ms-3">
                 <p class="fw-bold mb-1">{{o.name}}</p>
-                <p class="text-muted mb-0">ss</p>
+                <p class="text-muted mb-0"></p>
                 </div>
             </div>
             </td>
             <td>
-            <p class="fw-normal mb-1 ">{{o.customer.name}}</p>
-            <p class="text-muted mb-0">IT department</p>
+            <a href="{% url 'dashboard:customer-detail' o.customer.id %}">
+                <p class="fw-normal mb-1 ">{{o.customer.name}}</p>
+                <p class="text-muted mb-0">IT department</p>
+            </a>
             </td>
+            {% if o.is_confirmed %}
             <td>
-                <span class="badge rounded-pill bg-success">Success</span>
+                <span class="badge rounded-pill bg-success">{{o.is_confirmed}}</span>
             </td>
-            <td>Senior</td>
+            {% else %}
+            <td>
+                <span class="badge rounded-pill bg-warning">{{o.is_confirmed}}</span>
+            </td>
+            {% endif %}
+            <td>$ {{o.total_price}}</td>
             <td>
             <a href="{% url 'dashboard:order-detail' o.pk %}">
                 <button type="button" class="btn btn-link btn-sm btn-rounded">

@@ -41,7 +41,7 @@ function updateUserOrder(id, action){
 
   function removeUserOrder(id, action){
     return new Promise(function (resolve){
-    var url = 'remove-from-cart/'+id+'/'
+    var url = '/shop/cart/remove-from-cart/'+id+'/'
     
     fetch(url, {
         method: 'POST',
@@ -119,7 +119,7 @@ function updateUserOrder(id, action){
             total_price[i].innerText=result.price
             let cart_total=document.getElementById('cart_total');
             cart_total.innerText=result.cart_total;
-            console.log(result.cart_total)
+            //console.log(result.cart_total)
 
 
         })

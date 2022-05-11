@@ -1,26 +1,23 @@
-{% extends 'base.html'%}
+{% extends 'shop_home.html'%}
 
 
 {% block content %}
 
-      
-<div class="max-w-lg mx-auto flex flex-wrap p-6">
-    <div class="w-full bg-gray-100 p-6 rounded-xl">
-        <h1 class="mb-6 text-2xl">Log in</h1>
-
-        <form method="post" action="." class="space-y-3">
+<section class="h-100" >
+    <div class="container h-100" style="width: 600px; margin-top: 100px;  border-radius: 15px; padding: 30px; background-color: rgb(245, 244, 244);">
+        <form method="POST" >
             {% csrf_token %}
-
-            <div>
-                <label>username</label>
-                <input type="text" name="username" class="w-full mt-2 py-4 px-6 bg-white rounded-xl">
-            </div>
-
-            <div>
-                <label>Password</label>
-                <input type="password" name="password" class="w-full mt-2 py-4 px-6 bg-white rounded-xl">
-            </div>
-
+            <h1>Login</h1>
+            
+            <div class="form-group">
+                <label for="validationCustomUsername">username</label>
+                <input type="text" name="username" class="form-control"  placeholder="Enter username">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+              </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Submit</button>
             {% if form.errors %}
                 {% for field in form %}
                     {% for error in field.errors %}
@@ -36,14 +33,14 @@
                     </div>
                 {% endfor %}
             {% endif %}
-
-            <div>
-                <button class="py-4 px-6 rounded-xl text-white bg-purple-500 hover:bg-purple-700">Submit</button>
-            </div>
-        </form>
-        <a href="{% url 'reset-password' %}">Forgot password?</a>
+          </form>
+          <a href="{% url 'reset-password' %}">            
+              Forgot password?
+        </a>
 
     </div>
-</div>
+</section>
 
 {% endblock content %} 
+
+

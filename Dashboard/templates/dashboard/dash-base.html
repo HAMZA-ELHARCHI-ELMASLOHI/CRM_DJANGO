@@ -37,7 +37,7 @@
                 </li> 
              <li> <a href="{% url 'dashboard:pie-chart' %}" class="nav-link text-white"> <i class="fa fa-dashboard"></i><span class="ms-2">Chart</span> </a> </li> 
              <li> <a href="{% url 'dashboard:product-list' %}" class="nav-link text-white"> <i class="fa fa-first-order"></i><span class="ms-2">Producs</span> </a> </li> 
-             <li> <a href="{% url 'shop:categorie-list' %}" class="nav-link text-white"> <i class="fa fa-cog"></i><span class="ms-2">Categories</span> </a> </li> 
+             <li> <a href="{% url 'dashboard:categorie-list' %}" class="nav-link text-white"> <i class="fa fa-cog"></i><span class="ms-2">Categories</span> </a> </li> 
              <li> <a href="{% url 'dashboard:order-list' %}" class="nav-link text-white"> <i class="fa fa-bookmark"></i><span class="ms-2">Orders</span> </a> </li> 
              <li> <a href="{% url 'dashboard:customer-list' %}" class="nav-link text-white"> <i class="fa fa-bookmark"></i><span class="ms-2">Cutomers</span> </a> </li> 
 
@@ -61,7 +61,8 @@
                 {% block url %} {% endblock url %}
               </div>
             </div>
-          </div>
+        </div>
+        
           
         {% include 'messages.html' %}
          {% block dash %}

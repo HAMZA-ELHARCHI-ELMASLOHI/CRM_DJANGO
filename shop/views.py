@@ -2,7 +2,7 @@ from django.shortcuts import render, reverse, get_object_or_404, redirect
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Categorie, Product, Cart, CartItem, Order, Orderitems
-from .forms import ProductModelForm, CategorieModelForm, OrderModelForm
+from .forms import ProductModelForm, CategorieModelForm, OrderModelForm, OrderForm
 
 # Product views
 
@@ -163,7 +163,6 @@ def add_to_cart(request, id):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' :
         id = json.load(request)['id']
         item = get_object_or_404(Product, id=id)
-        print(item)
         customer=Customer.objects.get(user=request.user)
         cart=Cart.objects.get(customer=customer)
 
@@ -176,7 +175,7 @@ def add_to_cart(request, id):
         #messages.info(request, "This item quantity was updated.")
         return JsonResponse({'quantity':cart_item.quantity, 'price': cart_item.get_total, 'cart_total':cart.get_cart_total}, status=200, safe=False )
 
-def remove_from_cart(self, id):
+def remove_from_cart(request, id):
     #print(request)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' :
         id = json.load(request)['id']
@@ -244,19 +243,27 @@ class OrdersDetailView(LoginRequiredMixin, generic.DetailView):
 
 
 
-class CreateOrder(CustomerRequiredMixin, generic.View):
+class CreateOrder(CustomerRequiredMixin, generic.CreateView):
+    template_name = "categories/categorie-create.html"
+    form_class = OrderForm
+
+    
+
     def get(self, *args, **kwargs):
         customer=Customer.objects.get(user=self.request.user)
         cart=Cart.objects.get(customer=customer)
         items=CartItem.objects.filter(cart=cart)
-
+    
         total_price=cart.get_cart_total
         context = {
-            'items':items
+            'items':items,
+            'cart':cart
         }
-        order, created = Order.objects.get_or_create(
+        
+        order = Order.objects.create(
                 customer=customer,
-                total_price=total_price
+                total_price=total_price,
+                
             )
         
 
@@ -264,14 +271,71 @@ class CreateOrder(CustomerRequiredMixin, generic.View):
             Orderitems.objects.create(order=order,name=item.product.name ,product=item.product, price=item.get_total, quantity=item.quantity)
         order.save()
 
-        return render(self.request,  'products/product-list.html', context)
+        return render(self.request,  'cart/cart.html', context)
 
-class OrdersCreateView(ManagerRequiredMixin, generic.CreateView):
+class OrdersCreateView(ManagerRequiredMixin, generic.FormView):
     template_name = "orders/order-create.html"
-    form_class = OrderModelForm
+    form_class = OrderForm
+    
 
-    def get_success_url(self):
-        return reverse("shop:order-list")
+    def post(self, request, *args, **kwargs):
+        customer=Customer.objects.get(user=self.request.user)
+        cart=Cart.objects.get(customer=customer)
+        items=CartItem.objects.filter(cart=cart)
+    
+        total_price=cart.get_cart_total
+        
+        form = self.get_form()
+        if form.is_valid():
+            Adresse = form.cleaned_data['Adresse']
+            zipcode = form.cleaned_data['zipcode']
+
+            context = {
+            'items':items,
+            'cart':cart
+             }
+            order = Order.objects.create(
+                customer=customer,
+                total_price=total_price,
+                Adresse=Adresse,
+                zipcode=zipcode
+                
+            )
+            for item in items:
+                Orderitems.objects.create(order=order,name=item.product.name ,product=item.product, price=item.get_total, quantity=item.quantity)
+            order.save()
+
+            return render(self.request,  'cart/cart.html', context)
+        else:
+            print('sss')
+            print(subject)
+
+    '''        
+    def get(self, *args, **kwargs):
+        customer=Customer.objects.get(user=self.request.user)
+        cart=Cart.objects.get(customer=customer)
+        items=CartItem.objects.filter(cart=cart)
+    
+        total_price=cart.get_cart_total
+        context = {
+            'items':items,
+            'cart':cart
+        }
+        
+        order = Order.objects.create(
+                customer=customer,
+                total_price=total_price,
+                
+            )
+        
+
+        for item in items:
+            Orderitems.objects.create(order=order,name=item.product.name ,product=item.product, price=item.get_total, quantity=item.quantity)
+        order.save()
+
+        return render(self.request,  'cart/cart.html', context)'''
+
+    
 
     
 

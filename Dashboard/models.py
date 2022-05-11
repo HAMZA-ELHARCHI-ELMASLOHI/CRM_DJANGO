@@ -1,6 +1,6 @@
 import email
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 
 
 from account.models import User
@@ -12,10 +12,23 @@ class Customer(models.Model):
     name=models.CharField(max_length=20, null=True)
     email=models.EmailField(null=True)
 
+    def __str__(self):
+       return f"{self.name} "
+
+    def save(self, *args, **kwargs):
+        self.name=self.__str__()
+        super().save(*args, **kwargs)
+
 class Manager(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name=models.CharField(max_length=20, null=True)
     email=models.EmailField(null=True)
+    def __str__(self):
+       return f"{self.name} "
+
+    def save(self, *args, **kwargs):
+        self.name=self.__str__()
+        super().save(*args, **kwargs)
 
 class Csv(models.Model):
     file_name=models.FileField(upload_to='csvs')
@@ -24,9 +37,21 @@ class Csv(models.Model):
 
 
 def post_user_created_signal(sender, instance, created, **kwargs):
-    if created and instance.is_customer:
-        Customer.objects.create(user=instance, name=instance.username, email=instance.email)
-    if created and instance.is_manager:
-        Manager.objects.create(user=instance, name=instance.username, email=instance.email)
+    if (created and instance.is_customer) or instance.is_customer:
+        Customer.objects.get_or_create(user=instance, name=instance.username, email=instance.email)
+    if (created and instance.is_manager) or instance.is_manager:
+        Manager.objects.get_or_create(user=instance, name=instance.username, email=instance.email)
+    if created and instance.is_manager and instance.is_customer==False:
+        Customer.objects.filter(user=instance).delete()
+    if created and instance.is_customer and instance.is_manager==False:
+        Customer.objects.filter(user=instance).delete()
 
 post_save.connect(post_user_created_signal, sender=User)
+
+def post_user_deleted_signal(sender, instance, **kwargs):
+    if instance.is_customer:
+        Customer.objects.filter(user=instance).delete()
+    if instance.is_manager:
+        Manager.objects.filter(user=instance).delete()
+
+post_delete.connect(post_user_deleted_signal, sender=User)

@@ -8,23 +8,13 @@
 ##########
 {% block dash %}
 
-{% if request.user.is_manager%}
-{% endif %}
 
-{% for c in categories %}
-
-    {{c.name}}
-    <a href="{% url 'dashboard:categorie-delete' c.pk%}"> delete</a>
-    <a href="{% url 'dashboard:categorie-detail' c.pk%}"> view</a>
-
-    <br>
-{% endfor %}
-<div class="row row-cols-1  row-cols-md-4 g-4" style="margin-left: 10px;">
+<div class="row row-cols-1  row-cols-md-3 g-3" style="margin-left: 10px;">
 
   {% for p in products %}
 
   <div class="col" style="border-radius: 50px;">
-    <div class="card h-100 " style="width: 25em;">
+    <div class="card h-100 " style="width: 28em; ">
       <img src="{{ p.product_image.url}}" class="card-img-top h-100 w-100" >
       <div class="card-body">
         <h5 class="card-title">{{p.name}}</h5> ${{p.price}}
