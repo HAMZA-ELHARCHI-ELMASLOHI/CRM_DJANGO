@@ -8,7 +8,7 @@ from .views import (
     CategorieCreateView, CategorieDeleteView, CreateOrder, OrdersDeleteView,
     OrdersUpdateView, ProductListView, CustomerListView, CustomerDetailView,
     OrderListView ,OrderDetailView, CategorieDetailView, upload_csv,
-    CategorieListView
+    CategorieListView, UploadCsv
 
     )
 app_name='dashboard'
@@ -41,7 +41,7 @@ urlpatterns = [
     path('customers/', CustomerListView.as_view(), name='customer-list'),
     path('customer/<int:pk>/', CustomerDetailView.as_view(), name='customer-detail'),
 
-    path('upload-csv/', upload_csv, name='upload-csv')
+    path('upload-csv/', UploadCsv.as_view(), name='upload-csv')
 
 ]
 

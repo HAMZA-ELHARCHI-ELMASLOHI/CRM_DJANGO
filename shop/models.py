@@ -17,7 +17,7 @@ class Product(models.Model):
     product_image=models.ImageField(default='images/products/product-default.png', upload_to='images/products/')
     description = models.TextField()
     #date_added = models.DateTimeField(auto_now_add=True)
-    categorie=models.ForeignKey('Categorie', on_delete=models.CASCADE)
+    categorie=models.ForeignKey('Categorie', default='None', on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=5, decimal_places=2, blank=True)
     slug = models.SlugField()
 

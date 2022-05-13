@@ -17,7 +17,6 @@ class Customer(models.Model):
 
     def save(self, *args, **kwargs):
         self.name=self.__str__()
-        super().save(*args, **kwargs)
 
 class Manager(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -28,7 +27,7 @@ class Manager(models.Model):
 
     def save(self, *args, **kwargs):
         self.name=self.__str__()
-        super().save(*args, **kwargs)
+        
 
 class Csv(models.Model):
     file_name=models.FileField(upload_to='csvs')
@@ -38,14 +37,15 @@ class Csv(models.Model):
 
 def post_user_created_signal(sender, instance, created, **kwargs):
     if (created and instance.is_customer) or instance.is_customer:
-        Customer.objects.get_or_create(user=instance, name=instance.username, email=instance.email)
+        Customer.objects.update_or_create(user=instance, name=instance.username, email=instance.email)
     if (created and instance.is_manager) or instance.is_manager:
-        Manager.objects.get_or_create(user=instance, name=instance.username, email=instance.email)
-    if created and instance.is_manager and instance.is_customer==False:
-        Customer.objects.filter(user=instance).delete()
-    if created and instance.is_customer and instance.is_manager==False:
-        Customer.objects.filter(user=instance).delete()
+        Manager.objects.update_or_create(user=instance, name=instance.username, email=instance.email)
 
+    '''if instance.is_manager and instance.is_customer==False:
+        Customer.objects.filter(user=instance).delete()
+    if instance.is_customer and instance.is_manager==False:
+        Manager.objects.filter(user=instance).delete()'''
+  
 post_save.connect(post_user_created_signal, sender=User)
 
 def post_user_deleted_signal(sender, instance, **kwargs):

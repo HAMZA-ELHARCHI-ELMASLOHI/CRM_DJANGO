@@ -1,18 +1,18 @@
 {% extends 'shop_home.html' %}
 {% load static %}
 
+
+
 {% block content %}
 
 
 
-{% for c in categories %}
+<form action="" method="get" style="margin-top: 20px;">
+  {{productFilter.form}}
+  <button type="submit">search</button>
+</form>
 
-    {{c.name}}
-    <a href="{% url 'shop:categorie-detail' c.pk%}"> view</a>
-
-    <br>
-{% endfor %}
-<div class="row row-cols-1  row-cols-md-4 g-4" style="margin-left: 10px;">
+<div class="row row-cols-2  row-cols-md-3 g-5" style="margin: 30px;">
 
   {% for p in products %}
 
@@ -20,7 +20,7 @@
     <div class="card h-100 " style="width: 25em; border-radius: 20px;">
       <img src="{{ p.product_image.url}}" class="card-img-top h-100 w-100" style="border-radius: 20px;" >
       <div class="card-body">
-        <h5 class="card-title">{{p.name}}</h5>
+        <h5 class="card-title">{{p.name}}</h5>${{p.price}}
         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
 
         <a href="{% url 'shop:product-detail' p.id %}"><button class="btn btn-primary">view</button></a>

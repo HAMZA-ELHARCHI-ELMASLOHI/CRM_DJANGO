@@ -278,7 +278,48 @@ class CustomerDetailView(ManagerRequiredMixin, generic.DetailView):
         return render(self.request, 'dash-customer/customer-detail.html', context)
 
 
-def upload_csv(request):
+class UploadCsv(ManagerRequiredMixin, generic.View):
+    def get(self, *args, **kwargs):
+        uploadform=CsvModelForm()
+        return render(self.request, 'dashboard/upload_csv.html', {'uploadform': uploadform})
+
+    def post(self, *args, **kwargs):
+        uploadform=CsvModelForm(self.request.POST, self.request.FILES)
+        if uploadform.is_valid():
+            print('valid')
+
+            csv_file = self.request.FILES["csv_file"]
+            if not csv_file.name.endswith('.csv'):
+                messages.error(request,'File is not CSV type')
+                return HttpResponseRedirect(reverse("dashboard:product-list"))
+            #if file is too large, return
+            if csv_file.multiple_chunks():
+                messages.error(request,"Uploaded file is too big (%.2f MB)." % (csv_file.size/(1000*1000),))
+                return HttpResponseRedirect(reverse("dashboard:product-list"))
+
+            file_data = csv_file.read().decode("utf-8")		
+
+            lines = file_data.split("\n")
+            #loop over the lines and save them in db. If error , store as string and then display
+            for i, line in enumerate(lines):	
+                if(i==0):
+                        pass
+                else:					
+                    fields = line.split(",")
+                    print(fields)
+                    name = fields[0]
+                    description = fields[1]
+                    #categorie = fields[3]
+                    categorie=Categorie.objects.get(id=4)
+                    price = fields[3]
+                    print(name, description, categorie,price)
+                    Product.objects.create(name=name, description=description, categorie=categorie,price=price)
+    
+            return render(self.request, 'dashboard/upload_csv.html', {'uploadform': uploadform})
+
+
+
+def updload_csv(request):
     form= CsvModelForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
@@ -290,7 +331,57 @@ def upload_csv(request):
                 if(i==0):
                     pass
                 else:
-                    print(row)
-                print(row)
-        #Product.objects.create(name=name)
+                    name=row[0]
+                    description=row[2]
+                    cat=row[3]
+                    price=row[4]
+                    print(cat)  
+                    categorie=Categorie.objects.get(id=4)
+                    #print('sss',categorie.id)
+                    print(name, description, cat, price)
+                    Product.objects.create(name=name, description=description, categorie=categorie,price=price)
+                    messages.success(request, ' created successfully')
+                    return reverse('dashboard:product-list.html')
+
+    return render(request, 'dashboard/upload_csv.html', {'form': form})
+
+
+def upload_csv(request):
+
+    if request.method == 'POST':
+        form=CsvModelForm(request.POST, request.FILES)
+        if form.is_valid():
+            print('valid')
+
+            csv_file = request.FILES["csv_file"]
+            if not csv_file.name.endswith('.csv'):
+                messages.error(request,'File is not CSV type')
+                return HttpResponseRedirect(reverse("dashboard:upload-csv"))
+            #if file is too large, return
+            if csv_file.multiple_chunks():
+                messages.error(request,"Uploaded file is too big (%.2f MB)." % (csv_file.size/(1000*1000),))
+                return HttpResponseRedirect(reverse("dashboard:upload-csv"))
+
+            file_data = csv_file.read().decode("utf-8")		
+
+            lines = file_data.split("\n")
+            #loop over the lines and save them in db. If error , store as string and then display
+            for i, line in enumerate(lines):	
+                if(i==0):
+                        pass
+                else:					
+                    print(line)
+                    fields = line.split(",")
+                    print(fields)
+                    #print(fields[1])
+
+                    name = fields[0]
+                    description = fields[1]
+                    #categorie = fields[3]
+                    categorie=Categorie.objects.get(id=4)
+                    price = fields[3]
+                    print(name, description, categorie,price)
+                    Product.objects.create(name=name, description=description, categorie=categorie,price=price)
+    else:
+        form=CsvModelForm() 
     return render(request, 'dashboard/upload_csv.html', {'form': form})

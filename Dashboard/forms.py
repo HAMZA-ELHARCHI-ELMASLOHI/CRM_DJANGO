@@ -30,9 +30,6 @@ class OrderModelForm(forms.ModelForm):
         )
 
 
-class CsvModelForm(forms.ModelForm):
-    class Meta:
-        model = Csv
-        fields = (
-            'file_name',
-        )
+class CsvModelForm(forms.Form):    
+    csv_file=forms.FileField()
+        

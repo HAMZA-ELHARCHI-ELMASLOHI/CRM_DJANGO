@@ -18,6 +18,8 @@ from django.http import HttpResponse
 from Dashboard.models import Customer
 
 
+from .filters import ProductFilter
+
 
 class Shop_home(LoginRequiredMixin, generic.TemplateView):
     template_name = "shop_home.html"
@@ -29,9 +31,12 @@ class ProductListView(LoginRequiredMixin, generic.ListView):
     def get(self, *args, **kwargs):
         categorie=Categorie.objects.all()
         products=Product.objects.all()
+        productFilter=ProductFilter(self.request.GET, queryset=products)
+        products=productFilter.qs
         context = {
             'categories':categorie,
-            'products':products
+            'products':products,
+            'productFilter':productFilter
         }
         return render(self.request, 'products/product-list.html', context)
     
