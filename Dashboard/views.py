@@ -11,6 +11,8 @@ from .models import   Customer, Manager, Csv
 from django.contrib.auth import get_user_model
 from .forms import ProductModelForm, CategorieModelForm, OrderModelForm, CsvModelForm
 from shop.models import Product, Order, Categorie, Orderitems
+from account.models import UserProfile
+from account.forms import ProfileModelForm
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 
@@ -61,8 +63,6 @@ class Pie_chart(ManagerRequiredMixin, generic.View):
 
         queryset = Product.objects.order_by('-price')
         for q in queryset:
-            print(q.name)
-            print(q.price)
 
             labels.append(q.name)
             data.append(int(q.price))
@@ -286,102 +286,60 @@ class UploadCsv(ManagerRequiredMixin, generic.View):
     def post(self, *args, **kwargs):
         uploadform=CsvModelForm(self.request.POST, self.request.FILES)
         if uploadform.is_valid():
-            print('valid')
+            try:
+                csv_file = self.request.FILES["csv_file"]
+                if not csv_file.name.endswith('.csv'):
+                    messages.warning(self.request,'File is not CSV type')
+                    return HttpResponseRedirect(reverse("dashboard:product-list"))
+                #if file is too large, return
+                if csv_file.multiple_chunks():
+                    messages.warning(self.request,"Uploaded file is too big (%.2f MB)." % (csv_file.size/(1000*1000),))
+                    return HttpResponseRedirect(reverse("dashboard:product-list"))
 
-            csv_file = self.request.FILES["csv_file"]
-            if not csv_file.name.endswith('.csv'):
-                messages.error(request,'File is not CSV type')
+                file_data = csv_file.read().decode("utf-8")		
+
+                lines = file_data.split("\n")
+                #loop over the lines and save them in db. If error , store as string and then display
+                for i, line in enumerate(lines):	
+                    if(i==0):
+                            pass
+                    else:					
+                        fields = line.split(",")
+                        #print(fields)
+                        name = fields[0]
+                        description = fields[1]
+                        #categorie = fields[3]
+                        categorie=Categorie.objects.get(id=4)
+                        price = fields[3]
+                        #print(name, description, categorie,price)
+                        Product.objects.create(name=name, description=description, categorie=categorie,price=price)
+                messages.success(self.request, ' created successfully')
                 return HttpResponseRedirect(reverse("dashboard:product-list"))
-            #if file is too large, return
-            if csv_file.multiple_chunks():
-                messages.error(request,"Uploaded file is too big (%.2f MB)." % (csv_file.size/(1000*1000),))
+
+                return render(self.request, 'dashboard/upload_csv.html', {'uploadform': uploadform})
+            except Exception as e:
+                messages.warning(self.request, ' Unable to upload')
                 return HttpResponseRedirect(reverse("dashboard:product-list"))
 
-            file_data = csv_file.read().decode("utf-8")		
 
-            lines = file_data.split("\n")
-            #loop over the lines and save them in db. If error , store as string and then display
-            for i, line in enumerate(lines):	
-                if(i==0):
-                        pass
-                else:					
-                    fields = line.split(",")
-                    print(fields)
-                    name = fields[0]
-                    description = fields[1]
-                    #categorie = fields[3]
-                    categorie=Categorie.objects.get(id=4)
-                    price = fields[3]
-                    print(name, description, categorie,price)
-                    Product.objects.create(name=name, description=description, categorie=categorie,price=price)
+class ProfileView(ManagerRequiredMixin, generic.TemplateView):
+    template_name='dashboard/profile.html'
     
-            return render(self.request, 'dashboard/upload_csv.html', {'uploadform': uploadform})
+    def get(self, *args, **kwargs):
+        profile=UserProfile.objects.get(user=self.request.user)
+        context = {
+            'profile':profile
+        }
+        return render(self.request, 'dashboard/profile.html', context)
 
 
 
-def updload_csv(request):
-    form= CsvModelForm(request.POST or None, request.FILES or None)
-    if form.is_valid():
-        form.save()
-        form=CsvModelForm()
-        obj=Csv.objects.all().first()
-        with open(obj.file_name.path, 'r') as f:
-            reader=csv.reader(f)
-            for i, row in enumerate(reader):
-                if(i==0):
-                    pass
-                else:
-                    name=row[0]
-                    description=row[2]
-                    cat=row[3]
-                    price=row[4]
-                    print(cat)  
-                    categorie=Categorie.objects.get(id=4)
-                    #print('sss',categorie.id)
-                    print(name, description, cat, price)
-                    Product.objects.create(name=name, description=description, categorie=categorie,price=price)
-                    messages.success(request, ' created successfully')
-                    return reverse('dashboard:product-list.html')
+class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
+    template_name = "dashboard/profile-update.html"
+    form_class = ProfileModelForm
+    context_object_name='profile'
+    def get_queryset(self):
+        return UserProfile.objects.filter(user=self.request.user)
 
-    return render(request, 'dashboard/upload_csv.html', {'form': form})
-
-
-def upload_csv(request):
-
-    if request.method == 'POST':
-        form=CsvModelForm(request.POST, request.FILES)
-        if form.is_valid():
-            print('valid')
-
-            csv_file = request.FILES["csv_file"]
-            if not csv_file.name.endswith('.csv'):
-                messages.error(request,'File is not CSV type')
-                return HttpResponseRedirect(reverse("dashboard:upload-csv"))
-            #if file is too large, return
-            if csv_file.multiple_chunks():
-                messages.error(request,"Uploaded file is too big (%.2f MB)." % (csv_file.size/(1000*1000),))
-                return HttpResponseRedirect(reverse("dashboard:upload-csv"))
-
-            file_data = csv_file.read().decode("utf-8")		
-
-            lines = file_data.split("\n")
-            #loop over the lines and save them in db. If error , store as string and then display
-            for i, line in enumerate(lines):	
-                if(i==0):
-                        pass
-                else:					
-                    print(line)
-                    fields = line.split(",")
-                    print(fields)
-                    #print(fields[1])
-
-                    name = fields[0]
-                    description = fields[1]
-                    #categorie = fields[3]
-                    categorie=Categorie.objects.get(id=4)
-                    price = fields[3]
-                    print(name, description, categorie,price)
-                    Product.objects.create(name=name, description=description, categorie=categorie,price=price)
-    else:
-        form=CsvModelForm() 
-    return render(request, 'dashboard/upload_csv.html', {'form': form})
+    def get_success_url(self):
+        return reverse("dashboard:profile")

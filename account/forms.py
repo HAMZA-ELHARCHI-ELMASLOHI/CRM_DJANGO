@@ -19,7 +19,10 @@ class ProfileModelForm(forms.ModelForm):
         model = UserProfile
         fields = (
             'name',
+            'first_name',
+            'last_name',
             'email',
-            'age',
+            'phone_number',
+            'adresse',
             'image',
         )

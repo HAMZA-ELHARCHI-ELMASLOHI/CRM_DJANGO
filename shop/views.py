@@ -164,7 +164,6 @@ class CartView(CustomerRequiredMixin, generic.View):
 
 
 def add_to_cart(request, id):
-    #print(request)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' :
         id = json.load(request)['id']
         item = get_object_or_404(Product, id=id)
@@ -197,16 +196,14 @@ def remove_from_cart(request, id):
             cart_item.save()
         else:
             delete_from_cart(request, id)
-        #messages.info(request, "This item quantity was updated.")
+        messages.success(request, "This item quantity was updated.")
         return JsonResponse({'quantity':cart_item.quantity, 'price': cart_item.get_total,'cart_total':cart.get_cart_total}, status=200, safe=False )
 
 
 def delete_from_cart(request, id):
     item = get_object_or_404(Product, id=id)
-    print(item)
     cart_item = CartItem.objects.filter(product=item).delete()
-    print(cart_item)
-    #messages.info(request, "This item quantity was updated.")
+    messages.success(request, "This item quantity was updated.")
     return redirect("shop:product-list")
 
 
@@ -312,7 +309,6 @@ class OrdersCreateView(ManagerRequiredMixin, generic.FormView):
 
             return render(self.request,  'cart/cart.html', context)
         else:
-            print('sss')
             print(subject)
 
     '''        

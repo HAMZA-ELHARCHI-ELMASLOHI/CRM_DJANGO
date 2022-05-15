@@ -32,4 +32,3 @@ class OrderModelForm(forms.ModelForm):
 
 class CsvModelForm(forms.Form):    
     csv_file=forms.FileField()
-        

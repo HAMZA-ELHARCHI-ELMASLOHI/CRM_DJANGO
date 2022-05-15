@@ -7,8 +7,8 @@ from .views import (
     Home, Pie_chart, ProductCreateView, ProductDeleteView, ProductUpdateView,
     CategorieCreateView, CategorieDeleteView, CreateOrder, OrdersDeleteView,
     OrdersUpdateView, ProductListView, CustomerListView, CustomerDetailView,
-    OrderListView ,OrderDetailView, CategorieDetailView, upload_csv,
-    CategorieListView, UploadCsv
+    OrderListView ,OrderDetailView, CategorieDetailView,
+    CategorieListView, UploadCsv, ProfileView, ProfileUpdateView
 
     )
 app_name='dashboard'
@@ -17,7 +17,9 @@ urlpatterns = [
     path('', Home.as_view(), name='dash'),
     
     path('pie-chart/', Pie_chart.as_view(), name='pie-chart'),
-        
+    path('profile/', ProfileView.as_view(), name='profile'),
+    path('<int:pk>/update/', ProfileUpdateView.as_view(), name='profile-update'),
+
     path('products/', ProductListView.as_view(), name='product-list'),
 
     path('products/create/', ProductCreateView.as_view(), name='product-create'),
