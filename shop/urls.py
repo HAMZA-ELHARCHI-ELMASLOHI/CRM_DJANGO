@@ -3,12 +3,14 @@ from .views import (
     CategorieCreateView,  ProductListView, ProductDetailView, ProductCreateView, ProductDeleteView, ProductUpdateView,
      CategorieDeleteView, CategorieListView, CartItemsView,add_to_cart, delete_from_cart,Shop_home,
     remove_from_cart, CartView, OrdersCreateView, OrdersDeleteView, OrdersDetailView, OrdersListView, OrdersUpdateView
-    ,CreateOrder, pdf, CategorieDetailView, render_pdf_view
+    ,CreateOrder, pdf, CategorieDetailView, render_pdf_view, ProfileView, ProfileUpdateView
     )
 
 app_name='shop'
 
 urlpatterns = [
+    path('profile/', ProfileView.as_view(), name='profile'),
+    path('profile/<int:pk>/update/', ProfileUpdateView.as_view(), name='profile-update'),
     path('', Shop_home.as_view(), name='shop-home'),
     path('products/', ProductListView.as_view(), name='product-list'),
     path('product/<str:pk>/', ProductDetailView.as_view(), name='product-detail'),

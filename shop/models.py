@@ -16,10 +16,9 @@ class Product(models.Model):
     name=models.CharField(max_length=50)
     product_image=models.ImageField(default='images/products/product-default.png', upload_to='images/products/')
     description = models.TextField()
-    #date_added = models.DateTimeField(auto_now_add=True)
-    categorie=models.ForeignKey('Categorie', default='None', on_delete=models.CASCADE)
+    date_added = models.DateTimeField(auto_now=True)
+    categorie=models.ForeignKey('Categorie', on_delete=models.CASCADE, null=True, blank=True)
     price = models.DecimalField(max_digits=5, decimal_places=2, blank=True)
-    slug = models.SlugField()
 
     def get_absolute_url(self):
         return reverse("shop:product-list", kwargs={
@@ -117,7 +116,7 @@ class Cart(models.Model):
 
 
 class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE,default='1')
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     name=models.CharField(max_length=50)
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(auto_now=True)

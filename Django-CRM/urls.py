@@ -30,7 +30,6 @@ urlpatterns = [
 
     path('dashboard/', include('Dashboard.urls', namespace='dashboard')),
     path('shop/', include('shop.urls', namespace='shop')),
-    path('customers/', include('customers.urls', namespace='customers')),
 
     path('reset-password/', PasswordResetView.as_view(), name='reset-password'),
     path('password-reset-done/', PasswordResetDoneView.as_view(), name='password_reset_done'),

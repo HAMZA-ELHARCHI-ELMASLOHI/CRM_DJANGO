@@ -8,7 +8,8 @@ from .views import (
     CategorieCreateView, CategorieDeleteView, CreateOrder, OrdersDeleteView,
     OrdersUpdateView, ProductListView, CustomerListView, CustomerDetailView,
     OrderListView ,OrderDetailView, CategorieDetailView,
-    CategorieListView, UploadCsv, ProfileView, ProfileUpdateView
+    CategorieListView, UploadCsv, ProfileView, ProfileUpdateView, ExportCsv,
+    CustomerDeleteView, CustomerUpdateView
 
     )
 app_name='dashboard'
@@ -18,7 +19,7 @@ urlpatterns = [
     
     path('pie-chart/', Pie_chart.as_view(), name='pie-chart'),
     path('profile/', ProfileView.as_view(), name='profile'),
-    path('<int:pk>/update/', ProfileUpdateView.as_view(), name='profile-update'),
+    path('profile/<int:pk>/update/', ProfileUpdateView.as_view(), name='profile-update'),
 
     path('products/', ProductListView.as_view(), name='product-list'),
 
@@ -42,8 +43,12 @@ urlpatterns = [
 
     path('customers/', CustomerListView.as_view(), name='customer-list'),
     path('customer/<int:pk>/', CustomerDetailView.as_view(), name='customer-detail'),
+    path('customer/<str:pk>/delete/', CustomerDeleteView.as_view(), name='customer-delete'),
+    path('customer/<str:pk>/update/', CustomerUpdateView.as_view(), name='customer-update'),
 
-    path('upload-csv/', UploadCsv.as_view(), name='upload-csv')
+    path('upload-csv/', UploadCsv.as_view(), name='upload-csv'),
+    path('export-csv/', ExportCsv.as_view(), name='export-csv'),
+
 
 ]
 

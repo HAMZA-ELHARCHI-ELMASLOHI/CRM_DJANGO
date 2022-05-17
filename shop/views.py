@@ -4,6 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Categorie, Product, Cart, CartItem, Order, Orderitems
 from .forms import ProductModelForm, CategorieModelForm, OrderModelForm, OrderForm
 
+from account.models import UserProfile
+from account.forms import ProfileModelForm
 # Product views
 
 from account.mixins import ManagerRequiredMixin, CustomerRequiredMixin
@@ -25,7 +27,28 @@ class Shop_home(LoginRequiredMixin, generic.TemplateView):
     template_name = "shop_home.html"
 
 
-class ProductListView(LoginRequiredMixin, generic.ListView):
+class ProfileView(CustomerRequiredMixin, generic.TemplateView):
+    
+    def get(self, *args, **kwargs):
+        profile=UserProfile.objects.get(user=self.request.user)
+        context = {
+            'profile':profile
+        }
+        return render(self.request, 'profile.html', context)
+
+
+
+class ProfileUpdateView(CustomerRequiredMixin, generic.UpdateView):
+    template_name = "profile-update.html"
+    form_class = ProfileModelForm
+    context_object_name='profile'
+    def get_queryset(self):
+        return UserProfile.objects.filter(user=self.request.user)
+
+    def get_success_url(self):
+        return reverse("shop:profile")
+
+class ProductListView(CustomerRequiredMixin, generic.ListView):
     template_name = "products/product-list.html"
     
     def get(self, *args, **kwargs):
@@ -46,7 +69,7 @@ class ProductListView(LoginRequiredMixin, generic.ListView):
 
     context_object_name='products'
 
-class ProductDetailView(LoginRequiredMixin, generic.DetailView):
+class ProductDetailView(CustomerRequiredMixin, generic.DetailView):
     template_name = "products/product-detail.html"
     
     def get_queryset(self):
@@ -87,7 +110,7 @@ class ProductDeleteView(ManagerRequiredMixin, generic.DeleteView):
 
 # Categories
 
-class CategorieListView(LoginRequiredMixin, generic.ListView):
+class CategorieListView(CustomerRequiredMixin, generic.ListView):
     template_name = "categories/categorie-list.html"
     
     def get_queryset(self):
@@ -96,7 +119,7 @@ class CategorieListView(LoginRequiredMixin, generic.ListView):
     context_object_name='categories'
 
 
-class CategorieDetailView(LoginRequiredMixin, generic.DetailView):
+class CategorieDetailView(CustomerRequiredMixin, generic.DetailView):
     template_name = "categories/categorie-detail.html"
     
     def get(self, *args, **kwargs):
@@ -129,7 +152,7 @@ class CategorieDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 
 
-class CartItemsView(generic.ListView):
+class CartItemsView(CustomerRequiredMixin,generic.ListView):
     model = CartItem
     context_object_name='items'
     def get_queryset(self):
@@ -196,20 +219,20 @@ def remove_from_cart(request, id):
             cart_item.save()
         else:
             delete_from_cart(request, id)
-        messages.success(request, "This item quantity was updated.")
+        #messages.success(request, "This item quantity was updated.")
         return JsonResponse({'quantity':cart_item.quantity, 'price': cart_item.get_total,'cart_total':cart.get_cart_total}, status=200, safe=False )
 
 
 def delete_from_cart(request, id):
     item = get_object_or_404(Product, id=id)
     cart_item = CartItem.objects.filter(product=item).delete()
-    messages.success(request, "This item quantity was updated.")
+    #messages.success(request, "This item quantity was updated.")
     return redirect("shop:product-list")
 
 
 #Orders
 
-class OrdersListView(generic.View):
+class OrdersListView(CustomerRequiredMixin,generic.View):
     
     def get(self, *args, **kwargs):
         customer =Customer.objects.get(user=self.request.user)
@@ -227,7 +250,7 @@ class OrdersListView(generic.View):
 
 
 
-class OrdersDetailView(LoginRequiredMixin, generic.DetailView):
+class OrdersDetailView(CustomerRequiredMixin, generic.DetailView):
     template_name = "orders/order-detail.html"
 
     def get(self, *args, **kwargs):
@@ -275,7 +298,7 @@ class CreateOrder(CustomerRequiredMixin, generic.CreateView):
 
         return render(self.request,  'cart/cart.html', context)
 
-class OrdersCreateView(ManagerRequiredMixin, generic.FormView):
+class OrdersCreateView(CustomerRequiredMixin, generic.FormView):
     template_name = "orders/order-create.html"
     form_class = OrderForm
     
@@ -360,7 +383,7 @@ class OrdersDeleteView(ManagerRequiredMixin, generic.DeleteView):
         return Order.objects.all()
 
 
-class pdf(LoginRequiredMixin, generic.DetailView):
+class pdf(CustomerRequiredMixin, generic.DetailView):
     template_name = "orders/order-detail.html"
 
     def get(self, *args, **kwargs):

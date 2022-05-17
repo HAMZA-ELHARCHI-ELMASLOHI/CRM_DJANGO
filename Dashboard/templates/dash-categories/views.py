@@ -219,8 +219,6 @@ class OrderListView(ManagerRequiredMixin, generic.View):
             return render(self.request, 'dash-orders/order-list.html', context)
         except Exception :
             messages.warning(self.request, 'something went Wrong')
-            return render(self.request, 'dash-orders/order-list.html')
-
 
 
 
@@ -340,7 +338,7 @@ class CustomerDetailView(ManagerRequiredMixin, generic.DetailView):
         return render(self.request, 'dash-customer/customer-detail.html', context)
 
 class CustomerUpdateView(ManagerRequiredMixin, generic.UpdateView):
-    template_name = "dash-customer/customer-update.html"
+    template_name = "dash-orders/customer-update.html"
     form_class = CustomerModelForm
 
     def get_queryset(self):
@@ -357,7 +355,7 @@ class CustomerUpdateView(ManagerRequiredMixin, generic.UpdateView):
 
 
 class CustomerDeleteView(ManagerRequiredMixin, generic.DeleteView):
-    template_name = "dash-customer/customer-delete.html"
+    template_name = "dash-orders/customer-delete.html"
     
     def get_queryset(self):
         return Customer.objects.all()
@@ -379,8 +377,6 @@ class CustomerDeleteView(ManagerRequiredMixin, generic.DeleteView):
         """If the form is invalid, render the invalid form."""
         messages.warning(self.request, 'something went Wrong')
         return self.render_to_response(self.get_context_data(form=form))
-
-    
 
 class UploadCsv(ManagerRequiredMixin, generic.View):
     def get(self, *args, **kwargs):
@@ -413,10 +409,10 @@ class UploadCsv(ManagerRequiredMixin, generic.View):
                         name = fields[0]
                         description = fields[1]
                         #categorie = fields[3]
-                        #categorie=Categorie.objects.get(id=4)
-                        price = fields[2]
+                        categorie=Categorie.objects.get(id=4)
+                        price = fields[3]
                         #print(name, description, categorie,price)
-                        Product.objects.create(name=name, description=description,price=price)
+                        Product.objects.create(name=name, description=description, categorie=categorie,price=price)
                 messages.success(self.request, ' created successfully')
                 return HttpResponseRedirect(reverse("dashboard:product-list"))
 

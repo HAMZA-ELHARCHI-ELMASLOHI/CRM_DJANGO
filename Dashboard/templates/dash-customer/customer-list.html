@@ -22,6 +22,8 @@
             <th>Status</th>
             <th>Position</th>
             <th>Actions</th>
+            <th>Update</th>
+            <th>Delete</th>
         </tr>
         </thead>
         <tbody>
@@ -45,17 +47,34 @@
             <td>
             <p class="fw-bold mb-1">{{c.email}}</p>
             </td>
+            {% if c.user.is_staff %}
             <td>
-                <span class="badge rounded-pill bg-success">Success</span>
+                <span class="badge rounded-pill bg-success">Admin</span>
             </td>
+            {% elif c.user.is_customer %}
+            <td>
+                <span class="badge rounded-pill bg-success">Customer</span>
+            </td>
+            {% elif c.user.is_manager %}
+            <td>
+                <span class="badge rounded-pill bg-success">Manager</span>
+            </td>
+            
+            {% endif %}
             <td>Senior</td>
             <td>
             <a href="{% url 'dashboard:customer-detail' c.pk %}">
-                <button type="button" class="btn btn-link btn-sm btn-rounded">
+                <button type="button" class="btn btn-primary btn-sm btn-rounded">
                     view
                 </button>
             </a>
 
+            </td>
+            <td>
+                <a href="{% url 'dashboard:customer-update' c.pk %}"><button class="btn btn-outline-primary">Update</button></a>
+            </td>
+            <td>
+                <a href="{% url 'dashboard:customer-delete' c.pk %}"><button class="btn btn-danger">Delete</button></a>
             </td>
         </tr>
         {% endfor%}

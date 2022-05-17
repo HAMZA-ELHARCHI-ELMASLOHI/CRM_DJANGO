@@ -1,0 +1,100 @@
+{% extends 'shop_home.html' %}
+
+
+{% block content %}
+
+
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+<div class="row gutters-sm">
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-column align-items-center text-center">
+            <img src="{{ profile.image.url }}" name="image" alt="Admin" class="rounded-circle" width="150">
+            <div class="mt-3">
+              <input value="{{form.name.value}}" type="text" name="name">
+              <p class="text-secondary mb-1">Full Stack Developer</p>
+              <input value="{{form.adresse.value}}" type="text">
+              <button class="btn btn-outline-primary">Message</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <div class="col-md-8">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">First Name</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+                <input value="{{form.first_name.value}}" name="first_name" type="text">
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Last Name</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+                <input value="{{form.last_name.value}}" name="last_name" type="text">
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Email</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+                <input value="{{form.email.value}}" type="text" name="email" class="form-control">
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Phone</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+                <input value="{{form.phone_number.value}}" name="phone_number" type="text">
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Mobile</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+                <input value="{{form.phone_number.value}}" name="phone_number" type="text">
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Address</h6>
+            </div>
+            <div class="col-sm-9 text-secondary ">
+                <input value="{{form.adresse.value}}" name="adresse" type="text">
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-12">
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</form>
+
+    
+
+{% endblock content %}

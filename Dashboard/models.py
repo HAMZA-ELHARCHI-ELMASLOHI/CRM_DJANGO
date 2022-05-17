@@ -15,8 +15,7 @@ class Customer(models.Model):
     def __str__(self):
        return f"{self.name} "
 
-    def save(self, *args, **kwargs):
-        self.name=self.__str__()
+    
 
 class Manager(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -25,8 +24,7 @@ class Manager(models.Model):
     def __str__(self):
        return f"{self.name} "
 
-    def save(self, *args, **kwargs):
-        self.name=self.__str__()
+    
         
 
 class Csv(models.Model):
@@ -48,10 +46,11 @@ def post_user_created_signal(sender, instance, created, **kwargs):
   
 post_save.connect(post_user_created_signal, sender=User)
 
-def post_user_deleted_signal(sender, instance, **kwargs):
+'''def post_user_deleted_signal(sender, instance, **kwargs):
     if instance.is_customer:
         Customer.objects.filter(user=instance).delete()
     if instance.is_manager:
         Manager.objects.filter(user=instance).delete()
 
 post_delete.connect(post_user_deleted_signal, sender=User)
+'''

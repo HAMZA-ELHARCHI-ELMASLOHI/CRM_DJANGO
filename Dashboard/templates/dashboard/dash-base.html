@@ -39,8 +39,9 @@
              <li style="margin-bottom: 25px;"> <a href="{% url 'dashboard:product-list' %}" class="nav-link text-white"> <i class="fa fa-first-order"></i><span class="ms-2">Producs</span> </a> </li> 
              <li style="margin-bottom: 25px;"> <a href="{% url 'dashboard:categorie-list' %}" class="nav-link text-white"> <i class="fa fa-cog"></i><span class="ms-2">Categories</span> </a> </li> 
              <li style="margin-bottom: 25px;"> <a href="{% url 'dashboard:order-list' %}" class="nav-link text-white"> <i class="fa fa-bookmark"></i><span class="ms-2">Orders</span> </a> </li> 
+             {% if request.user.is_staff %}
              <li style="margin-bottom: 25px;"> <a href="{% url 'dashboard:customer-list' %}" class="nav-link text-white"> <i class="fa fa-bookmark"></i><span class="ms-2">Cutomers</span> </a> </li> 
-
+            {% endif %}
          </ul> <hr> 
          <div class="dropdown"> 
             <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false"> 
@@ -65,9 +66,62 @@
         
           
         {% include 'messages.html' %}
-         {% block dash %}
-
-         {% endblock dash %}
+        {% block dash %}
+        <div class="row row-cols-1  row-cols-md-3 g-4" style="margin-left: 10px;">
+        
+                  
+            <div class="col" style="border-radius: 50px;">
+              <div class="card h-100 " style="width: 25em;">
+                <div class="card-body">
+                  <h1 class="card-title">Confirmed Orders</h5>
+                    <hr>
+                  <h3 class="card-text">{{orders}}</h3>
+          
+                  <a href="{% url 'dashboard:order-list'%}"><button class="btn btn-primary">view</button></a>
+                  
+                </div>
+              </div>
+            </div>
+            <div class="col" style="border-radius: 50px;">
+                <div class="card h-100 " style="width: 25em;">
+                  <div class="card-body">
+                    <h1 class="card-title">Total Categories</h5>
+                      <hr>
+                    <h3 class="card-text">{{categories}}</h3>
+            
+                    <a href="#"><button class="btn btn-primary">view</button></a>
+                    
+                  </div>
+                </div>
+              </div>
+              <div class="col" style="border-radius: 50px;">
+                <div class="card h-100 " style="width: 25em;">
+                  <div class="card-body">
+                    <h1 class="card-title">Total Products</h5>
+                      <hr>
+                    <h3 class="card-text">{{products}}</h3>
+            
+                    <a href="#"><button class="btn btn-primary">view</button></a>
+                    
+                  </div>
+                </div>
+              </div>
+        
+              <div class="col" style="border-radius: 50px;">
+                <div class="card h-100 " style="width: 25em;">
+                  <div class="card-body">
+                    <h1 class="card-title">Total Customers</h5>
+                      <hr>
+                    <h3 class="card-text">{{customers}}</h3>
+            
+                    <a href="#"><button class="btn btn-primary">view</button></a>
+                    
+                  </div>
+                </div>
+              </div>
+          
+          </div>
+        {% endblock dash %}
       </div>
       
 

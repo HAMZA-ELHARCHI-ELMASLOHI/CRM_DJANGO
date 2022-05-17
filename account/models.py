@@ -20,7 +20,7 @@ class UserProfile(models.Model):
     last_name=models.CharField(max_length=20, null=True)
 
     email=models.EmailField(null=True)
-    born=models.DateTimeField(('born date'), editable=True)
+    born=models.DateTimeField(('born date'), editable=True, null=True)
     adresse=models.CharField(max_length=100, null=True)
     phone_number = models.CharField(("phone number"), max_length=15, blank=True)
 
