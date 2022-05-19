@@ -14,6 +14,8 @@
         <div class="card-body">
           <div class="d-flex flex-column align-items-center text-center">
             <img src="{{ profile.image.url }}" name="image" alt="Admin" class="rounded-circle" width="150">
+            <input type="file" name="image" class="form-control" >
+
             <div class="mt-3">
               <input value="{{form.name.value}}" type="text" name="name">
               <p class="text-secondary mb-1">Full Stack Developer</p>
@@ -84,7 +86,7 @@
           <hr>
           <div class="row">
             <div class="col-sm-12">
-                <button class="btn btn-primary" type="submit">Submit</button>
+                <button class="btn btn-primary" type="submit">Update</button>
             </div>
           </div>
         </div>
@@ -92,7 +94,6 @@
 
     </div>
   </div>
-  <button class="btn btn-primary" type="submit">Update</button>
 
 </form>
 

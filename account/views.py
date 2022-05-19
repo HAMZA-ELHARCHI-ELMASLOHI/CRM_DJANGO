@@ -3,8 +3,8 @@ from django.shortcuts import render, reverse
 from django.http import HttpResponse
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView
-from .forms import CustomUserCreationForm, ProfileModelForm
+from django.contrib.auth import views as auth_views  
+from .forms import CustomUserCreationForm, ProfileModelForm, LoginForm
 from .models import UserProfile
 
 # Create your views here.
@@ -20,6 +20,20 @@ class SignUpView(generic.CreateView):
     def get_success_url(self):
         return reverse('login')
 
+
+
+class LoginView(auth_views.LoginView):
+    form_class=LoginForm
+    template_name = 'registration/login.html'
+        
+
+    def get_success_url(self):
+        if self.request.user.is_staff:
+            return reverse('admin:index')
+        if self.request.user.is_manager:
+            return reverse('dashboard:dash')
+        elif self.request.user.is_customer:
+            return reverse('shop:product-list')
 
 # Profile views 
 

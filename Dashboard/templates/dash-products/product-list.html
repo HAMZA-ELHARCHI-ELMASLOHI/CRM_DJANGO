@@ -11,11 +11,11 @@
 
 <a href="{% url 'dashboard:export-csv'%}"><button class="btn btn-primary">export Csv</button></a>
 
-<div class="row row-cols-1  row-cols-md-3 g-3" style="margin-left: 10px;">
+<div class="row ">
 
   {% for p in products %}
 
-  <div class="col" style="border-radius: 50px;">
+  <div class="col-md-12 col-lg-4 mb-4 mb-lg-0" style="border-radius: 50px;">
     <div class="card h-100 " style="width: 28em; ">
       <img src="{{ p.product_image.url}}" class="card-img-top h-100 w-100" >
       <div class="card-body">

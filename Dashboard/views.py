@@ -14,7 +14,6 @@ from shop.models import Product, Order, Categorie, Orderitems
 from account.models import UserProfile
 from account.forms import ProfileModelForm
 from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
 
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect, HttpResponse
@@ -409,7 +408,6 @@ class UploadCsv(ManagerRequiredMixin, generic.View):
                             pass
                     else:					
                         fields = line.split(",")
-                        #print(fields)
                         name = fields[0]
                         description = fields[1]
                         #categorie = fields[3]

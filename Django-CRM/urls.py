@@ -18,11 +18,11 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView,PasswordResetConfirmView, PasswordResetCompleteView
-from account.views import SignUpView
+from django.contrib.auth.views import LogoutView, PasswordResetView, PasswordResetDoneView,PasswordResetConfirmView, PasswordResetCompleteView
+from account.views import SignUpView, LoginView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     path('home/', include('account.urls', namespace='account')),
     path('', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),

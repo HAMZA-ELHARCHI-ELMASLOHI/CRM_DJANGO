@@ -18,6 +18,8 @@ from django.conf import settings
 from django.http import HttpResponse
 
 from Dashboard.models import Customer
+from django.contrib import messages
+
 
 
 from .filters import ProductFilter
@@ -199,7 +201,7 @@ def add_to_cart(request, id):
             )
         cart_item.quantity= (cart_item.quantity +1)
         cart_item.save()
-        #messages.info(request, "This item quantity was updated.")
+        #messages.success(request, "This item was added to Cart.")
         return JsonResponse({'quantity':cart_item.quantity, 'price': cart_item.get_total, 'cart_total':cart.get_cart_total}, status=200, safe=False )
 
 def remove_from_cart(request, id):
@@ -226,7 +228,7 @@ def remove_from_cart(request, id):
 def delete_from_cart(request, id):
     item = get_object_or_404(Product, id=id)
     cart_item = CartItem.objects.filter(product=item).delete()
-    #messages.success(request, "This item quantity was updated.")
+    messages.success(request, "This item was deleted successfuly.")
     return redirect("shop:product-list")
 
 

@@ -38,7 +38,9 @@
             <td>
                 <span class="badge rounded-pill bg-success">Success</span>
             </td>
-            <td>Senior</td>
+            <td>
+                <a href="{% url 'shop:order-invoice' o.id  %}">pdf</a>
+            </td>
             <td>
                 <a href="{% url 'shop:order-detail' o.pk %}">
             <button type="button" class="btn btn-link btn-sm btn-rounded">

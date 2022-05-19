@@ -13,3 +13,11 @@ desactivate environment
 start django project
 - django-admin startproject  .
     
+docker-compose up -d --build
+
+docker-compose down
+
+docker exec -it d8bde4950075 python manage.py migrate
+
+docker exec -it d8bde4950075 python manage.py createsuperuser
+
