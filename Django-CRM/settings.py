@@ -12,8 +12,10 @@ env=environ.Env(
 )
 environ.Env.read_env()
 
-DEBUG=env('DEBUG')
-SECRET_KEY=env('SECRET_KEY')
+#DEBUG=env('DEBUG')
+#SECRET_KEY=env('SECRET_KEY')
+DEBUG=True
+SECRET_KEY='t8ptgan4x64w+fscptls=nim-w70)ejqt6yue31nrh6l&r1o7j'
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -83,7 +85,7 @@ WSGI_APPLICATION = 'Django-CRM.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-'''
+
 DATABASES = {
     'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -103,6 +105,8 @@ DATABASES = {
         'PORT': env('PORT'),
     }
 }
+
+'''
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -168,7 +172,7 @@ APPEND_SLASH=False
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-
+'''
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
@@ -181,7 +185,7 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
     X_FRAME_OPTIONS = "DENY"
 
-    ALLOWED_HOSTS = ["*"]
+    #ALLOWED_HOSTS = ["*"]
 
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = env("EMAIL_HOST")
@@ -190,3 +194,4 @@ if not DEBUG:
     EMAIL_USE_TLS = True
     EMAIL_PORT = env("EMAIL_PORT")
     DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
+    '''
