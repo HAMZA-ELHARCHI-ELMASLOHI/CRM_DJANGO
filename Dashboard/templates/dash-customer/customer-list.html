@@ -1,13 +1,11 @@
 {% extends 'dashboard/dash-base.html' %}
 {% load static %}
 
-{% if request.user.is_manager%}
 
 {% block url %}<a href="{% url 'dashboard:product-create'%}"><button class="btn btn-primary">Create New Customer</button></a><br>{% endblock url %}
 {% block type %}Customers {% endblock type %}
 {% block title %}Customers {% endblock title %}
 
-{% endif %}
 
 
 {% block dash %}
@@ -32,13 +30,13 @@
             <td>
             <div class="d-flex align-items-center">
                 <img
-                    src="https://mdbootstrap.com/img/new/avatars/8.jpg"
+                    src="{{ c.more.image.url }}"
                     alt=""
                     style="width: 45px; height: 45px"
                     class="rounded-circle"
                     />
                 <div class="ms-3">
-                <p class="fw-bold mb-1">{{c.name}}</p>
+                <p class="fw-bold mb-1">{{c.first_name}}</p>
                 <p class="text-muted mb-0"></p>
 
                 </div>
@@ -47,17 +45,13 @@
             <td>
             <p class="fw-bold mb-1">{{c.email}}</p>
             </td>
-            {% if c.user.is_staff %}
+            {% if c.is_staff and c.type == c.Types.CUSTOMER%}
             <td>
-                <span class="badge rounded-pill bg-success">Admin</span>
+                <span class="badge rounded-pill bg-success">Admin + Customer</span>
             </td>
-            {% elif c.user.is_customer %}
+            {% elif c.type == c.Types.CUSTOMER %}
             <td>
                 <span class="badge rounded-pill bg-success">Customer</span>
-            </td>
-            {% elif c.user.is_manager %}
-            <td>
-                <span class="badge rounded-pill bg-success">Manager</span>
             </td>
             
             {% endif %}

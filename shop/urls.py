@@ -39,7 +39,7 @@ urlpatterns = [
     path('order/', OrdersListView.as_view(), name='order-list'),
     path('order/<int:pk>/', OrdersDetailView.as_view(), name='order-detail'),
     path('order/create/', OrdersCreateView.as_view(), name='order-create'),
-    #path('order/<int:pk>/delete/', OrdersDeleteView.as_view(), name='order-delete'),
+    path('order/<int:pk>/delete/', OrdersDeleteView.as_view(), name='order-delete'),
     #path('order/<int:pk>/update/', OrdersUpdateView.as_view(), name='order-update'),
 
     #order pdf invoice

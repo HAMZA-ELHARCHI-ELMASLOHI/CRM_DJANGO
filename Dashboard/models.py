@@ -1,4 +1,3 @@
-import email
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 
@@ -7,7 +6,7 @@ from account.models import User
 # Create your models here.
 
 
-class Customer(models.Model):
+'''class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name=models.CharField(max_length=20, null=True)
     email=models.EmailField(null=True)
@@ -22,7 +21,7 @@ class Manager(models.Model):
     name=models.CharField(max_length=20, null=True)
     email=models.EmailField(null=True)
     def __str__(self):
-       return f"{self.name} "
+       return f"{self.name} "'''
 
     
         
@@ -33,18 +32,19 @@ class Csv(models.Model):
     activated=models.DateTimeField(auto_now=True)
 
 
+'''
 def post_user_created_signal(sender, instance, created, **kwargs):
-    if (created and instance.is_customer) or instance.is_customer:
-        Customer.objects.update_or_create(user=instance, name=instance.username, email=instance.email)
-    if (created and instance.is_manager) or instance.is_manager:
-        Manager.objects.update_or_create(user=instance, name=instance.username, email=instance.email)
+    if created :
+        Customer.objects.get_or_create(user=instance, name=instance.username, email=instance.email)
+    if created:
+        Manager.objects.get_or_create(user=instance, name=instance.username, email=instance.email)
 
-    '''if instance.is_manager and instance.is_customer==False:
+    if instance.is_manager and instance.is_customer==False:
         Customer.objects.filter(user=instance).delete()
     if instance.is_customer and instance.is_manager==False:
         Manager.objects.filter(user=instance).delete()'''
   
-post_save.connect(post_user_created_signal, sender=User)
+#post_save.connect(post_user_created_signal, sender=User)
 
 '''def post_user_deleted_signal(sender, instance, **kwargs):
     if instance.is_customer:

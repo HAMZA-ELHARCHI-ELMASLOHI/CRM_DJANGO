@@ -17,7 +17,7 @@ from xhtml2pdf import pisa
 from django.conf import settings
 from django.http import HttpResponse
 
-from Dashboard.models import Customer
+from account.models import Customer
 from django.contrib import messages
 
 
@@ -25,7 +25,7 @@ from django.contrib import messages
 from .filters import ProductFilter
 
 
-class Shop_home(LoginRequiredMixin, generic.TemplateView):
+class Shop_home(CustomerRequiredMixin, generic.TemplateView):
     template_name = "shop_home.html"
 
 
@@ -159,7 +159,7 @@ class CartItemsView(CustomerRequiredMixin,generic.ListView):
     context_object_name='items'
     def get_queryset(self):
         customer=Customer.objects.get(user=request.user)
-        cart=Cart.objects.get(customer=customer)
+        cart=Cart.objects.get(user=request.user)
         #price=cart.get_cart_total
 
         return CartItem.objects.filter(user=self.request.user)
@@ -170,8 +170,8 @@ class CartItemsView(CustomerRequiredMixin,generic.ListView):
 class CartView(CustomerRequiredMixin, generic.View):
     def get(self, *args, **kwargs):
 
-        customer=Customer.objects.get(user=self.request.user)
-        cart=Cart.objects.get(customer=customer)
+        #customer=Customer.objects.get(user=self.request.user)
+        cart=Cart.objects.get(user=self.request.user)
         items=CartItem.objects.filter(cart=cart).order_by('-quantity')
         context = {
             'cart': cart,
@@ -192,8 +192,8 @@ def add_to_cart(request, id):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' :
         id = json.load(request)['id']
         item = get_object_or_404(Product, id=id)
-        customer=Customer.objects.get(user=request.user)
-        cart=Cart.objects.get(customer=customer)
+        customer=request.user
+        cart=Cart.objects.get(user=request.user)
 
         cart_item, created = CartItem.objects.get_or_create(
                 product=item,
@@ -209,8 +209,8 @@ def remove_from_cart(request, id):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' :
         id = json.load(request)['id']
         item = get_object_or_404(Product, id=id)
-        customer=Customer.objects.get(user=request.user)
-        cart=Cart.objects.get(customer=customer)
+        customer=request.user
+        cart=Cart.objects.get(user=request.user)
 
         cart_item, created = CartItem.objects.get_or_create(
                 product=item,
@@ -237,8 +237,8 @@ def delete_from_cart(request, id):
 class OrdersListView(CustomerRequiredMixin,generic.View):
     
     def get(self, *args, **kwargs):
-        customer =Customer.objects.get(user=self.request.user)
-        orders=Order.objects.filter(customer=customer)
+        customer =self.request.user
+        orders=Order.objects.filter(user=self.request.user)
 
         context = {
             'orders': orders,
@@ -277,8 +277,8 @@ class CreateOrder(CustomerRequiredMixin, generic.CreateView):
     
 
     def get(self, *args, **kwargs):
-        customer=Customer.objects.get(user=self.request.user)
-        cart=Cart.objects.get(customer=customer)
+        customer=self.request.user
+        cart=Cart.objects.get(user=self.request.user)
         items=CartItem.objects.filter(cart=cart)
     
         total_price=cart.get_cart_total
@@ -288,7 +288,7 @@ class CreateOrder(CustomerRequiredMixin, generic.CreateView):
         }
         
         order = Order.objects.create(
-                customer=customer,
+                user=customer,
                 total_price=total_price,
                 
             )
@@ -306,8 +306,8 @@ class OrdersCreateView(CustomerRequiredMixin, generic.FormView):
     
 
     def post(self, request, *args, **kwargs):
-        customer=Customer.objects.get(user=self.request.user)
-        cart=Cart.objects.get(customer=customer)
+        customer=self.request.user
+        cart=Cart.objects.get(user=self.request.user)
         items=CartItem.objects.filter(cart=cart)
     
         total_price=cart.get_cart_total
@@ -322,7 +322,7 @@ class OrdersCreateView(CustomerRequiredMixin, generic.FormView):
             'cart':cart
              }
             order = Order.objects.create(
-                customer=customer,
+                user=self.request.user,
                 total_price=total_price,
                 Adresse=Adresse,
                 zipcode=zipcode
@@ -377,7 +377,7 @@ class OrdersUpdateView(ManagerRequiredMixin, generic.UpdateView):
 
 
 
-class OrdersDeleteView(ManagerRequiredMixin, generic.DeleteView):
+class OrdersDeleteView(CustomerRequiredMixin, generic.DeleteView):
     template_name = "orders/order-delete.html"
     def get_success_url(self):
         return reverse("shop:order-list")
@@ -407,7 +407,7 @@ def render_pdf_view(request, *args, **kwargs):
     order_id = kwargs['pk']
     order=Order.objects.get(id=order_id)
     items=Orderitems.objects.filter(order=order)
-    customer =Customer.objects.get(user=request.user)
+    customer =request.user
 
     template_path = 'orders/invoice.html'
     context = {'orders': order, 'items':items, 'customer':customer}

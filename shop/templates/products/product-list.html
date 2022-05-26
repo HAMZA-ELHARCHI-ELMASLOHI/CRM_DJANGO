@@ -4,41 +4,53 @@
 
 
 {% block content %}
-
-
-
-<form action="" method="get" style="margin-top: 20px;">
-  {{productFilter.form}}
-  <button type="submit">search</button>
-</form>
-
-<div class="row row-cols-2  row-cols-md-3 g-5" style="margin: 10px;">
-
-  {% for p in products %}
-
-  <div class="col">
-    <div class="card h-100 " style="width: 25em; border-radius: 20px;">
-      <img src="{{ p.product_image.url}}" class="card-img-top h-100 w-100" style="border-radius: 20px;" >
-      <div class="card-body">
-        <h5 class="card-title">{{p.name}}</h5>${{p.price}}
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-
-        <a href="{% url 'shop:product-detail' p.id %}"><button class="btn btn-primary">view</button></a>
-        <button data-product="{{p.id}}" data-action="add" class="update-cart btn btn-secondary">add to cart</button>
-
-      </div>
-
-    </div>
-  </div>
-
-  {% endfor %}
-
-</div>
-
-
-
+<!-- product section -->
+<section class="product_section layout_padding">
   
+  <div class="container">
+     <div class="heading_container heading_center">
+        <h2>
+           Our <span>products</span>
+        </h2>
+     </div>
+     <form action="" method="get" style="margin-top: 20px;">
+      {{productFilter.form}}
+      <button type="submit">search</button>
+    </form>
+     <div class="row">
+      {% for p in products %}
+        <div class="col-sm-6 col-md-4 col-lg-4">
+           <div class="box">
+              <div class="option_container">
+                 <div class="options">
+                    <a href="" class="option1">
+                      <button data-product="{{p.id}}" data-action="add" class="update-cart btn ">add to cart</button>
 
+                    </a>
+                    <a href="{% url 'shop:product-detail' p.id %}" class="option2">
+                    View
+                    </a>
+                 </div>
+              </div>
+              <div class="img-box">
+                 <img src="{{ p.product_image.url}}" alt="">
+              </div>
+              <div class="detail-box">
+                 <h5>
+                  {{p.name}}
+                 </h5>
+                 <h6>
+                    ${{p.price}}
+                 </h6>
+              </div>
+           </div>
+        </div>
+        {% endfor %}
+
+     </div>
+  </div>
+</section>
+<!-- end product section -->
 
 
 <script>

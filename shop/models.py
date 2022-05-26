@@ -2,12 +2,15 @@ from distutils.command.upload import upload
 from email.policy import default
 from django.db import models
 from account.models import User
-from Dashboard.models import Customer
+from account.models import Customer
 from django.db.models.signals import post_save, post_delete
 import uuid
 from django.shortcuts import reverse
 from django.core.mail import send_mail
 from django.utils import timezone
+from django.conf import settings
+from django.contrib import messages
+
 
 # Create your models here.
 
@@ -69,7 +72,7 @@ class CartItem(models.Model):
     
     
 class Cart(models.Model):
-    customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(auto_now=True)
 
@@ -91,7 +94,7 @@ class Cart(models.Model):
     @property
     def get_cart_total(self):
         #customer=Customer.objects.get(user=self.user)
-        cart=Cart.objects.get(customer=self.customer)
+        cart=Cart.objects.get(user=self.user)
 
         orderitems = CartItem.objects.filter(cart=cart)
         total = sum([item.get_total for item in orderitems])
@@ -100,7 +103,7 @@ class Cart(models.Model):
     @property
     def get_total_items(self):
         #customer=Customer.objects.get(user=self.user)
-        cart=Cart.objects.get(customer=self.customer)
+        cart=Cart.objects.get(user=self.user)
         orderitems = CartItem.objects.filter(cart=cart)
         total = sum([item.quantity for item in orderitems])
         return total 
@@ -109,14 +112,14 @@ class Cart(models.Model):
     
 
     def __str__(self):
-            return  self.customer.name + '-cart'
+            return  self.user.username + '-cart'
 
 
 	    
 
 
 class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name=models.CharField(max_length=50)
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(auto_now=True)
@@ -126,7 +129,7 @@ class Order(models.Model):
     total_price= models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-       return f" {self.customer.name} Order {self.id} "
+       return f" {self.user.username} Order {self.id} "
 
     @property
     def get_total_order(self):
@@ -161,27 +164,28 @@ class Orderitems(models.Model):
 
 
 
-def post_customer_created_signal(sender, instance, created, **kwargs):
-    if created:
-        Cart.objects.create(customer=instance)
+def post_user_created_signal(sender, instance, created, **kwargs):
+    if created and instance.type==User.Types.CUSTOMER:
+        print('user created + cart')
+        Cart.objects.create(user=instance)
 
 
-post_save.connect(post_customer_created_signal, sender=Customer) 
+post_save.connect(post_user_created_signal, sender=User) 
 
 
-def post_customer_deleted_signal(sender, instance, **kwargs):
-        Cart.objects.filter(customer=instance).delete()
-
-
-post_delete.connect(post_customer_deleted_signal, sender=Customer) 
 
 def order_created_signal(sender, instance, created, **kwargs):
     if created:
         print('listner work ')
-        #send_mail('a odrer has been created', 'see on website', 'hamza', recipient_list)
+        '''try:
+            send_mail('a odrer has been created', 'see on website', from_email= settings.EMAIL_HOST_USER ,recipient_list=['elharchihamza77@gmail.com'])
+        except Exception as e:
+            messages.warning(self.request, 'something went Wrong')'''
 
 
 post_save.connect(order_created_signal, sender=Order) 
+
+
 
 class Notification(models.Model):
     message=models.TextField()

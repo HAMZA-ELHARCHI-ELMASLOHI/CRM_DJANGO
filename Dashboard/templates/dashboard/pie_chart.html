@@ -1,35 +1,137 @@
 {% extends 'dashboard/dash-base.html' %}
 
 {% block dash %}
-<div id="container" style="width: 75%;">
-    <canvas id="pie-chart"></canvas>
-  </div>
+<style type="text/css">
+  .why_ .box {
+   text-align: center;
+   margin-top: 45px;
+   padding: 20px 100px;
+   border-radius: 5px;
+   background-color: #ffffff;
+}
+</style>
+      <section class="why_">
+        <div class="container">
+           <div class="row">
+              <div class="col-md-6">
+                 <div class="box ">
+                    <div >
+                      <canvas id="pie" style="width:100%;max-width:600px"></canvas>
+                    </div>
+                 </div>
+              </div>
+              <div class="col-md-6">
+                 <div class="box ">
+                    
+                    <div>
+                      <canvas id="line-chart" style="width:100%;max-width:600px"></canvas>
+                    </div>
+                 </div>
+              </div>
+              
+           </div>
+        </div>
+     </section>
+
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
   <script>
 
-    var config = {
-      type: 'pie',
-      data: {
-        datasets: [{
-          data: {{ data|safe }},
-          backgroundColor: [
-            'Red', 'Orange', 'Yellow', 'Green', 'Blue'
-          ],
-          label: 'Population'
-        }],
-        labels: {{ labels|safe }}
-      },
-      options: {
-        responsive: true
-      }
-    };
+//pie chart
 
-    window.onload = function() {
-      var ctx = document.getElementById('pie-chart').getContext('2d');
-      window.myPie = new Chart(ctx, config);
-    };
+var barColors = [
+  "#b91d47",
+  "#00aba9",
+  "#2b5797",
+  "#e8c3b9",
+  "#1e7145"
+];
 
+new Chart("pie", {
+  type: "pie",
+  data: {
+    labels: {{ labels|safe }},
+    datasets: [{
+      backgroundColor: barColors,
+      data: {{ data|safe }},
+    }]
+  },
+  options: {
+    title: {
+      display: true,
+      text: "Products Price"
+    }
+  }
+});
+
+// line chart
+var xValues = [100,200,300,400,500,600,700,800,900,1000];
+
+new Chart("line-chart", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{ 
+      data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
+      borderColor: "red",
+      fill: false
+    }, { 
+      data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
+      borderColor: "green",
+      fill: false
+    }, { 
+      data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
+      borderColor: "blue",
+      fill: false
+    }]
+  },
+  options: {
+    legend: {display: false}
+  }
+});
   </script>
 
 {% endblock dash %}
+
+<style type="text/css">
+  .why_ .box {
+   text-align: center;
+   margin-top: 45px;
+   background-color: #002c3e;
+   padding: 75px 80px;
+   border-radius: 5px;
+   color: #ffffff;
+}
+</style>
+      <section class="why_">
+        <div class="container">
+           <div class="row">
+              <div class="col-md-6">
+                 <div class="box ">
+                    <div >
+                       <h5>
+                          Fast Delivery
+                       </h5>
+                       <p>
+                          variations of passages of Lorem Ipsum available
+                       </p>
+                    </div>
+                 </div>
+              </div>
+              <div class="col-md-6">
+                 <div class="box ">
+                    
+                    <div>
+                       <h5>
+                          Free Shiping
+                       </h5>
+                       <p>
+                          variations of passages of Lorem Ipsum available
+                       </p>
+                    </div>
+                 </div>
+              </div>
+              
+           </div>
+        </div>
+     </section>

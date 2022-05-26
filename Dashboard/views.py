@@ -7,11 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from account.mixins import ManagerRequiredMixin, AdminRequiredMixin
-from .models import   Customer, Manager, Csv
+from .models import    Csv
 from django.contrib.auth import get_user_model
 from .forms import ProductModelForm, CategorieModelForm, OrderModelForm, CsvModelForm, CustomerModelForm
 from shop.models import Product, Order, Categorie, Orderitems
-from account.models import UserProfile
+from account.models import UserProfile, Manager, Customer
 from account.forms import ProfileModelForm
 from django.contrib import messages
 
@@ -32,12 +32,22 @@ class Home(ManagerRequiredMixin, generic.View):
         orders=Order.objects.filter(is_confirmed=True).count()
         customers=Customer.objects.count()
         profile=UserProfile.objects.get(user=self.request.user)
+        labels = []
+        data = []
+
+        queryset = Product.objects.order_by('-price')
+        for q in queryset:
+
+            labels.append(q.name)
+            data.append(int(q.price))
         context = {
             'categories':categorie,
             'products':products,
             'orders':orders,
             'customers':customers,
-            'profile':profile
+            'profile':profile,
+            'labels': labels,
+            'data': data,
         }
         return render(self.request, 'dashboard/dash-base.html', context)
 
@@ -48,10 +58,20 @@ class StatisticView(ManagerRequiredMixin, generic.View):
         categorie=Categorie.objects.count()
         products=Product.objects.count()
         orders=Order.objects.count()
+        labels = []
+        data = []
+
+        queryset = Product.objects.order_by('-price')
+        for q in queryset:
+
+            labels.append(q.name)
+            data.append(int(q.price))
         context = {
             'categories':categorie,
             'products':products,
-            'orders':orders
+            'orders':orders,
+            'labels': labels,
+            'data': data,
         }
         
         return render(self.request, 'dash-products/home.html', context)
@@ -208,7 +228,7 @@ class OrderListView(ManagerRequiredMixin, generic.View):
     
     def get(self, *args, **kwargs):
         try:
-            customer =Customer.objects.get(user=self.request.user)
+            customer =self.request.user
             orders=Order.objects.all()
 
             context = {
@@ -317,7 +337,7 @@ class OrdersDeleteView(ManagerRequiredMixin, generic.DeleteView):
 class CustomerListView(ManagerRequiredMixin, generic.ListView):
     template_name = "dash-customer/customer-list.html"
     
-    def get(self, *args, **kwargs):
+    def get(self, *args, **kwargs): 
         customers=Customer.objects.all()
         context = {
             'customers':customers,
@@ -330,8 +350,8 @@ class CustomerDetailView(ManagerRequiredMixin, generic.DetailView):
     
     def get(self, *args, **kwargs):
         customer_id = self.kwargs['pk']
-        customer=Customer.objects.get(id=customer_id)
-        orders=Order.objects.filter(customer=customer)
+        customer=Customer.objects.get(id=self.kwargs['pk'])
+        orders=Order.objects.filter(user=customer)
         context = {
             'customer':customer,
             'orders':orders

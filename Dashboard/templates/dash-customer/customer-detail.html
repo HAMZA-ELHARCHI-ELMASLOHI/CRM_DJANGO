@@ -3,7 +3,6 @@
 
 {% block dash %}
 
-{% if request.user.is_manager%}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
   <h1 class="h2">Customer Detail</h1>
   <div class="btn-toolbar mb-2 mb-md-0">
@@ -12,7 +11,6 @@
 </div>
 
 
-{% endif %}
 
 <h3 class="h2">{{customer.name}} Orders</h3>
 
@@ -48,8 +46,8 @@
             </div>
             </td>
             <td>
-            <a href="{% url 'dashboard:customer-detail' o.customer.id %}">
-                <p class="fw-normal mb-1 ">{{o.customer.name}}</p>
+            <a href="{% url 'dashboard:customer-detail' o.user.id %}">
+                <p class="fw-normal mb-1 ">{{o.user.username}}</p>
                 <p class="text-muted mb-0">IT department</p>
             </a>
             </td>

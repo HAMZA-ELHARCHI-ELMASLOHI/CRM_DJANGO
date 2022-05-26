@@ -2,16 +2,21 @@
 {% load static %}
 
 {% block content %}
-
-<section class="ml-5">
-    <table class="table align-middle mb-0 bg-white">
+<div class="heading_container heading_center">
+    <h2>
+        <span>Order</span> list
+    </h2>
+ </div>
+<section class="ml-5" style="margin: 30px;">
+    <table class="table align-middle mb-0 bg-white" >
         <thead class="bg-light">
         <tr>
             <th>Name</th>
-            <th>Title</th>
-            <th>Status</th>
+            <th>Confirmed</th>
             <th>Position</th>
             <th>Actions</th>
+            <th>Delete</th>
+
         </tr>
         </thead>
         <tbody>
@@ -20,7 +25,7 @@
             <td>
             <div class="d-flex align-items-center">
                 <img
-                    src="https://mdbootstrap.com/img/new/avatars/8.jpg"
+                    src="{{ user.more.image.url }}"
                     alt=""
                     style="width: 45px; height: 45px"
                     class="rounded-circle"
@@ -31,24 +36,36 @@
                 </div>
             </div>
             </td>
+            {% if o.is_confirmed %}
             <td>
-            <p class="fw-normal mb-1 ">Software engineer</p>
-            <p class="text-muted mb-0">IT department</p>
+                <span class="badge rounded-pill bg-success">{{o.is_confirmed}}</span>
+            </td>
+            {% else %}
+            <td>
+                <span class="badge rounded-pill bg-warning">{{o.is_confirmed}}</span>
+            </td>
+            {% endif %}
+            <td>
+                <a href="{% url 'shop:order-invoice' o.id  %}">
+                    <button type="button" class="btn btn-secondary btn-sm btn-rounded">
+                        PDF
+                    </button>
+                </a>
             </td>
             <td>
-                <span class="badge rounded-pill bg-success">Success</span>
-            </td>
-            <td>
-                <a href="{% url 'shop:order-invoice' o.id  %}">pdf</a>
-            </td>
-            <td>
-                <a href="{% url 'shop:order-detail' o.pk %}">
-            <button type="button" class="btn btn-link btn-sm btn-rounded">
+            <a href="{% url 'shop:order-detail' o.pk %}">
+            <button type="button" class="btn btn-primary btn-sm btn-rounded">
                 view
             </button>
             </a>
-
             </td>
+            <td>
+                <a href="{% url 'shop:order-delete' o.pk %}">
+                <button type="button" class="btn btn-danger btn-sm btn-rounded">
+                    delete
+                </button>
+                </a>
+                </td>
         </tr>
         {% endfor%}
         </tbody>

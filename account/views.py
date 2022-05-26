@@ -5,7 +5,7 @@ from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import views as auth_views  
 from .forms import CustomUserCreationForm, ProfileModelForm, LoginForm
-from .models import UserProfile
+from .models import UserProfile, User
 
 # Create your views here.
 
@@ -30,9 +30,9 @@ class LoginView(auth_views.LoginView):
     def get_success_url(self):
         if self.request.user.is_staff:
             return reverse('admin:index')
-        if self.request.user.is_manager:
+        if self.request.user.type==User.Types.MANAGER:
             return reverse('dashboard:dash')
-        elif self.request.user.is_customer:
+        elif self.request.user.type==User.Types.CUSTOMER:
             return reverse('shop:product-list')
 
 # Profile views 
