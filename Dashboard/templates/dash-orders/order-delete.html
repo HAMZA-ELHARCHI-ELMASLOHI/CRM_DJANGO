@@ -1,12 +1,26 @@
-{% extends 'shop_home.html' %}
+{% extends 'dashboard/dash-base.html' %}
 
-
-{% block content %}
-    <form method="POST">
-        are you sure want to delete 
-        {% csrf_token %}
-        {{form}}
-        <button > Submit </button>
+{% block url %}<a href="{% url 'dashboard:categorie-create'%}"></a><br>{% endblock url %}
+{% block type %}Orders {% endblock type %}
+{% block title %}Orders {% endblock title %}
+{% block active %}nav-link text-white{% endblock active %}
+{% block order %}nav-link active{% endblock order %}
+##########
+{% block dash %}
+        
     </form>
     
-{% endblock content %}
+    <section class="h-100" >
+        <div class="container h-100" style="width: 600px; margin-top: 100px;  border-radius: 15px; padding: 30px; background-color: rgb(245, 244, 244);">
+        <form method="POST">
+
+            <h4>are you sure want to delete this Order ?</h4><br><br>
+            {% csrf_token %}
+            {{form}}
+            <button class="btn btn-danger">Yes, I am sure.</button>      
+        </form>
+        <a href="{% url 'dashboard:order-list'%}"> <button class="btn btn-primary">Back to Orders</button></a>    
+
+        </div>
+    </section>
+{% endblock dash %}

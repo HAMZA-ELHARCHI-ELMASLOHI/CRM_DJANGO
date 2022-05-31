@@ -1,32 +1,76 @@
 {% extends 'dashboard/dash-base.html' %}
 {% load static %}
+{% block active %}nav-link text-white{% endblock active %}
+{% block order %}nav-link active{% endblock order %}
 
 {% block dash %}
 
-
-
-    {{orders.name}}
-    {{orders.total_price}}
-
-    
-
-    
-    {% for i in items %}
-    f
-        {{i.name}}
-        {{i.quantity}}
+<section class="h-100 h-custom" style="background-color: #eee;">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col">
+          <div class="card">
+            <div class="card-body p-4">
+  
+              <div class="row">
+  
+                  <h5 class="mb-3"><a href="{% url 'dashboard:order-list'%}" class="text-body"><i
+                        class="fas fa-long-arrow-alt-left me-2"></i>Back to Orders</a></h5>
+                  <hr>
+  
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                      <p class="mb-1"><strong>Order name:</strong>   <span style="color: blue; ">{{orders.name}}</span></p> 
+                      <p class="mb-0"> <strong>Price:</strong> {{orders.total_price}} $</p>
+                    </div>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <a href="{% url 'dashboard:order-invoice' orders.id  %}"><button class="btn btn-secondary">Show PDF</button></a>
+                    <a href="{% url 'dashboard:order-update' orders.pk %}"><button class="btn btn-primary">Update</button></a>
+                  </div>
+  
+  
+                  {% for p in items %}
         
-    {% endfor %}
+                    {% csrf_token %}
+          
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between">
+                        <div class="d-flex flex-row align-items-center">
+                          <div>
+                            <img
+                              src="{{ p.product.product_image.url}}"
+                              class="img-fluid rounded-3" alt="Shopping item" style="width: 65px;">
+                          </div>
+                          <div class="ms-3">
+                            <h5>{{p.name}}</h5>
+                            <p class="small mb-0">{{p.product.description}}</p>
+                          </div>
+                        </div>
+                        <div class="d-flex flex-row align-items-center">
+                          <div style="width: 150px;">
+                            <h5 class="quantity fw-normal mb-0">Quantity: {{p.quantity}}</h5>
+                          </div>
+                          
 
-    <br>
-
-<a href="{% url 'dashboard:order-list'%}">back</a>
-
-<a href="{% url 'dashboard:order-update' orders.pk %}">
-    <button type="button" class="btn btn-link btn-sm btn-rounded">
-        update
-    </button>
-</a>
+                          
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                
+                
+              </div>
+  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
 {% endblock dash %}
 

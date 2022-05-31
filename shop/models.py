@@ -126,8 +126,8 @@ class Order(models.Model):
     Adresse=models.CharField(max_length=200)
     zipcode=models.IntegerField(default=0)
     is_confirmed=models.BooleanField(default=False)
-    total_price= models.DecimalField(max_digits=5, decimal_places=2)
-
+    total_price= models.DecimalField(max_digits=7, decimal_places=2)
+    costumer_phone=models.IntegerField()
     def __str__(self):
        return f" {self.user.username} Order {self.id} "
 

@@ -316,6 +316,7 @@ class OrdersCreateView(CustomerRequiredMixin, generic.FormView):
         if form.is_valid():
             Adresse = form.cleaned_data['Adresse']
             zipcode = form.cleaned_data['zipcode']
+            costumer_phone = form.cleaned_data['costumer_phone']
 
             context = {
             'items':items,
@@ -325,8 +326,8 @@ class OrdersCreateView(CustomerRequiredMixin, generic.FormView):
                 user=self.request.user,
                 total_price=total_price,
                 Adresse=Adresse,
-                zipcode=zipcode
-                
+                zipcode=zipcode,
+                costumer_phone=costumer_phone
             )
             for item in items:
                 Orderitems.objects.create(order=order,name=item.product.name ,product=item.product, price=item.get_total, quantity=item.quantity)

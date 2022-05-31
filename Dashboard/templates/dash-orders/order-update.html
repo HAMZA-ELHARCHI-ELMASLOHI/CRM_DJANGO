@@ -1,15 +1,18 @@
 {% extends 'dashboard/dash-base.html' %}
 
-
+{% block active %}nav-link text-white{% endblock active %}
+{% block order %}nav-link active{% endblock order %}
 {% block dash %}
-    <form method="POST">
-        update <br>
-        {% csrf_token %}
-        {{form}}
-        <button class="btn btn-danger"> confirm </button>
-    </form>
-    <br>
-    <a href="{% url 'dashboard:order-list'%}"><button class="btn btn-primary">No ,back to Orders </button></a>
+<section class="h-100" >
+    <div class="container h-100" style="width: 600px; margin-top: 100px;  border-radius: 15px; padding: 30px; background-color: rgb(245, 244, 244);">
+        <h1>Confirm Order</h1>
+        <form method="POST">
+             <br>
+            {% csrf_token %}
+            {{form}} <br><br>
+            <button style="margin-left:10px;" class="btn btn-danger"> confirm </button>
+        </form>
+    </div>
+</section>
 
-    
 {% endblock dash %}

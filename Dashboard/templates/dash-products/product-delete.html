@@ -1,8 +1,11 @@
 {% extends 'dashboard/dash-base.html' %}
 
 {% block url %}<a href="{% url 'dashboard:categorie-create'%}"></a><br>{% endblock url %}
-{% block type %}Prodducts {% endblock type %}
-{% block title %}Prodducts {% endblock title %}
+{% block type %}Products {% endblock type %}
+{% block title %}Products {% endblock title %}
+
+{% block active %}nav-link text-white{% endblock active %}
+{% block product %}nav-link active{% endblock product %}
 ##########
 {% block dash %}
         
@@ -16,9 +19,9 @@
             {% csrf_token %}
             {{form}}
             <button class="btn btn-danger">Yes, I am sure.</button>      
-            <a href="{% url 'dashboard:product-list'%}"> <button class="btn btn-primary">Back to produdcts</button></a>    
-        </form>
-    
+        </form><br>
+        <a href="{% url 'dashboard:product-list'%}"> <button class="btn btn-primary">Back to produdcts</button></a>    
+
         </div>
     </section>
 {% endblock dash %}

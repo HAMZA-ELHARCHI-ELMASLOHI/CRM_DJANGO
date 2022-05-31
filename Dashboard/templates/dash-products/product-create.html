@@ -3,6 +3,9 @@
 {% block url %}<a href="{% url 'dashboard:product-list'%}"><button class="btn btn-primary">Products</button></a><br>{% endblock url %}
 {% block type %}Products Create{% endblock type %}
 {% block title %}Products Create {% endblock title %}
+
+{% block active %}nav-link text-white{% endblock active %}
+{% block product %}nav-link active{% endblock product %}
 {% block dash %}
 
 
@@ -48,7 +51,6 @@
     </section>
 
     
-    <a href="{% url 'shop:categorie-list' %}"> Categories </a>
 
 
 {% endblock dash %}

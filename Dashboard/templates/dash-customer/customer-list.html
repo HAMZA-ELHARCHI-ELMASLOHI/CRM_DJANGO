@@ -2,10 +2,13 @@
 {% load static %}
 
 
+
+
 {% block url %}<a href="{% url 'dashboard:product-create'%}"><button class="btn btn-primary">Create New Customer</button></a><br>{% endblock url %}
 {% block type %}Customers {% endblock type %}
 {% block title %}Customers {% endblock title %}
-
+{% block active %}nav-link text-white{% endblock active %}
+{% block customer %}nav-link active{% endblock customer %}
 
 
 {% block dash %}

@@ -32,15 +32,14 @@
             <span class="fs-4" style="margin-bottom: 30px; margin-top: 15px;">Dashboard</span> 
         </a> <hr>
          <ul class="nav nav-pills flex-column mb-auto"> 
-             <li class="nav-item" style="margin-bottom: 25px;"> <a href="{% url 'dashboard:dash' %}" class="nav-link active" aria-current="page">
+             <li class="nav-item" style="margin-bottom: 25px;"> <a href="{% url 'dashboard:dash' %}" class="{% block active %}nav-link active{% endblock active %}" aria-current="page">
                   <i class="fa fa-home"></i><span class="ms-2">Home</span> </a> 
                 </li> 
-             <li style="margin-bottom: 25px;"> <a href="{% url 'dashboard:pie-chart' %}" class="nav-link text-white"> <i class="fa fa-dashboard"></i><span class="ms-2">Chart</span> </a> </li> 
-             <li style="margin-bottom: 25px;"> <a href="{% url 'dashboard:product-list' %}" class="nav-link text-white"> <i class="fa fa-first-order"></i><span class="ms-2">Producs</span> </a> </li> 
-             <li style="margin-bottom: 25px;"> <a href="{% url 'dashboard:categorie-list' %}" class="nav-link text-white"> <i class="fa fa-cog"></i><span class="ms-2">Categories</span> </a> </li> 
-             <li style="margin-bottom: 25px;"> <a href="{% url 'dashboard:order-list' %}" class="nav-link text-white"> <i class="fa fa-bookmark"></i><span class="ms-2">Orders</span> </a> </li> 
+             <li style="margin-bottom: 25px;"> <a href="{% url 'dashboard:product-list' %}" class="{% block product %}nav-link text-white{% endblock product %}"> <i class="fa fa-first-order"></i><span class="ms-2">Producs</span> </a> </li> 
+             <li style="margin-bottom: 25px;"> <a href="{% url 'dashboard:categorie-list' %}" class="{% block categorie %}nav-link text-white{% endblock categorie %}"> <i class="fa fa-cog"></i><span class="ms-2">Categories</span> </a> </li> 
+             <li style="margin-bottom: 25px;"> <a href="{% url 'dashboard:order-list' %}" class="{% block order %}nav-link text-white{% endblock order %}"> <i class="fa fa-bookmark"></i><span class="ms-2">Orders</span> </a> </li> 
              {% if request.user.is_staff %}
-             <li style="margin-bottom: 25px;"> <a href="{% url 'dashboard:customer-list' %}" class="nav-link text-white"> <i class="fa fa-bookmark"></i><span class="ms-2">Cutomers</span> </a> </li> 
+             <li style="margin-bottom: 25px;"> <a href="{% url 'dashboard:customer-list' %}" class="{% block customer %}nav-link text-white{% endblock customer %}"> <i class="fa fa-bookmark"></i><span class="ms-2">Cutomers</span> </a> </li> 
             {% endif %}
          </ul> <hr> 
          <div class="dropdown"> 
@@ -131,28 +130,49 @@
              background-color: #ffffff;
           }
           </style>
-                <section class="why_">
-                  <div class="container">
-                     <div class="row">
-                        <div class="col-md-6">
-                           <div class="box ">
-                              <div >
-                                <canvas id="pie" style="width:100%;max-width:600px"></canvas>
+                <div class="row" style="margin: 10px;">
+                  <div class="col-lg-6">
+                      <div class="card">
+                          <div class="card-body">
+               
+                              <h4 class="card-title mb-4">Line Chart</h4>
+
+                              <!--
+                              <div class="row text-center">
+                                  <div class="col-4">
+                                      <h5 class="mb-0">86541</h5>
+                                      <p class="text-muted text-truncate">Activated</p>
+                                  </div>
+                                  <div class="col-4">
+                                      <h5 class="mb-0">2541</h5>
+                                      <p class="text-muted text-truncate">Pending</p>
+                                  </div>
+                                  <div class="col-4">
+                                      <h5 class="mb-0">102030</h5>
+                                      <p class="text-muted text-truncate">Deactivated</p>
+                                  </div>
                               </div>
-                           </div>
-                        </div>
-                        <div class="col-md-6">
-                           <div class="box ">
+               -->
+                              <canvas id="pie"></canvas>
+               
+                          </div>
+                      </div>
+                  </div> <!-- end col -->
+               
+                  <div class="col-lg-6">
+                      <div class="card">
+                          <div class="card-body">
+               
+                              <h4 class="card-title mb-4">Bar Chart</h4>
+               
                               
-                              <div>
-                                <canvas id="line-chart" style="width:100%;max-width:600px"></canvas>
-                              </div>
-                           </div>
-                        </div>
-                        
-                     </div>
-                  </div>
-               </section>
+               
+                              <canvas id="bar-chart"></canvas>
+               
+                          </div>
+                      </div>
+                  </div> <!-- end col -->
+               </div> <!-- end row -->
           
           
             <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
@@ -185,29 +205,26 @@
             }
           });
           
-          // line chart
-          var xValues = [100,200,300,400,500,600,700,800,900,1000];
-          
-          new Chart("line-chart", {
-            type: "line",
+          // bar chart
+          var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
+          var yValues = [55, 49, 44, 24, 15];
+          var barColors = ["red", "green","blue","orange","brown"];
+
+          new Chart("bar-chart", {
+            type: "bar",
             data: {
-              labels: xValues,
-              datasets: [{ 
-                data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
-                borderColor: "red",
-                fill: false
-              }, { 
-                data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
-                borderColor: "green",
-                fill: false
-              }, { 
-                data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
-                borderColor: "blue",
-                fill: false
+              labels: {{ labels_2|safe }},
+              datasets: [{
+                backgroundColor: barColors,
+                data: {{ data_2|safe }},
               }]
             },
             options: {
-              legend: {display: false}
+              legend: {display: false},
+              title: {
+                display: true,
+                text: "Orders by Total price"
+              }
             }
           });
             </script>

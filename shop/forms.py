@@ -42,3 +42,4 @@ class OrderModelForm(forms.ModelForm):
 class OrderForm(forms.Form):
     Adresse = forms.CharField(label='adresse ', max_length=100)
     zipcode =forms.IntegerField(label='Zip code')
+    costumer_phone=forms.IntegerField(label='costumer_phone')

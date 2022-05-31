@@ -34,12 +34,18 @@ class Home(ManagerRequiredMixin, generic.View):
         profile=UserProfile.objects.get(user=self.request.user)
         labels = []
         data = []
+        labels_2 = []
+        data_2 = []
 
         queryset = Product.objects.order_by('-price')
         for q in queryset:
-
             labels.append(q.name)
             data.append(int(q.price))
+
+        bar = Order.objects.all()
+        for q in bar:
+            labels_2.append(q.name)
+            data_2.append(int(q.total_price))
         context = {
             'categories':categorie,
             'products':products,
@@ -48,6 +54,8 @@ class Home(ManagerRequiredMixin, generic.View):
             'profile':profile,
             'labels': labels,
             'data': data,
+            'labels_2': labels_2,
+            'data_2': data_2,
         }
         return render(self.request, 'dashboard/dash-base.html', context)
 
@@ -136,7 +144,13 @@ class ProductUpdateView(ManagerRequiredMixin, generic.UpdateView):
         messages.warning(self.request, 'something went Wrong')
         return self.render_to_response(self.get_context_data(form=form))
 
+class ProductDetailView(ManagerRequiredMixin, generic.DetailView):
+    template_name = "dash-products/product-detail.html"
+    
+    def get_queryset(self):
+        return Product.objects.all()
 
+    context_object_name='products'
 
 class ProductDeleteView(ManagerRequiredMixin, generic.DeleteView):
     template_name = "dash-products/product-delete.html"

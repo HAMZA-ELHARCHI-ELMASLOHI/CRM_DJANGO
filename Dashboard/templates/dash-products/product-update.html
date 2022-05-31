@@ -1,4 +1,6 @@
 {% extends 'dashboard/dash-base.html' %}
+{% block active %}nav-link text-white{% endblock active %}
+{% block product %}nav-link active{% endblock product %}
 
 
 {% block dash %}
@@ -17,7 +19,7 @@
               
             <div class="form-group">
                 <label >Product Image</label>
-                <img src="/media/{{form.product_image.value}}" alt="">
+                <img src="/media/{{form.product_image.value}}" alt="" style="max-width: 500px;">
                 <input type="file" name="product_image" class="form-control" >
             </div>     
             

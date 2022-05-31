@@ -4,7 +4,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import (
-    Home, Pie_chart, ProductCreateView, ProductDeleteView, ProductUpdateView,
+    Home, Pie_chart, ProductCreateView, ProductDeleteView, ProductUpdateView,ProductDetailView,
     CategorieCreateView, CategorieDeleteView, CreateOrder, OrdersDeleteView,
     OrdersUpdateView, ProductListView, CustomerListView, CustomerDetailView,
     OrderListView ,OrderDetailView, CategorieDetailView,
@@ -12,6 +12,7 @@ from .views import (
     CustomerDeleteView, CustomerUpdateView
 
     )
+from shop.views import render_pdf_view
 app_name='dashboard'
 
 urlpatterns = [
@@ -24,6 +25,7 @@ urlpatterns = [
     path('products/', ProductListView.as_view(), name='product-list'),
 
     path('products/create/', ProductCreateView.as_view(), name='product-create'),
+    path('product/<str:pk>/', ProductDetailView.as_view(), name='product-detail'),
     path('products/<str:pk>/delete/', ProductDeleteView.as_view(), name='product-delete'),
     path('products/<str:pk>/update/', ProductUpdateView.as_view(), name='product-update'),
 
@@ -49,6 +51,7 @@ urlpatterns = [
     path('upload-csv/', UploadCsv.as_view(), name='upload-csv'),
     path('export-csv/', ExportCsv.as_view(), name='export-csv'),
 
+    path('order/invoice/<int:pk>', render_pdf_view, name='order-invoice')
 
 ]
 

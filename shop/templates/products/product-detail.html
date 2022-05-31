@@ -19,7 +19,7 @@
     <h3 class="title mb-3">{{products.name}}</h3>
 
   <p class="price-detail-wrap"> 
-    <span class="price h3 text-warning"> 
+    <span class="price h3"> 
       <span class="num">{{products.price}} $</span>
     </span> 
   </p> 
@@ -38,7 +38,8 @@
   </div> 
     
     <hr>
-    <a href="#" class="btn btn-lg btn-outline-primary text-uppercase"> <i class="fas fa-shopping-cart"></i> Add to cart </a>
+    <button data-product="{{products.id}}" data-action="add" class="update-cart btn btn-outline-primary ">add to cart</button>
+
   </article>
       </aside> 
     </div> 
