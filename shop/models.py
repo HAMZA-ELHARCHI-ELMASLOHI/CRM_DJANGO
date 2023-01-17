@@ -185,7 +185,3 @@ def order_created_signal(sender, instance, created, **kwargs):
 
 post_save.connect(order_created_signal, sender=Order) 
 
-
-
-class Notification(models.Model):
-    message=models.TextField()

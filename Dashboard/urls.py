@@ -4,21 +4,21 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import (
-    Home, Pie_chart, ProductCreateView, ProductDeleteView, ProductUpdateView,ProductDetailView,
-    CategorieCreateView, CategorieDeleteView, CreateOrder, OrdersDeleteView,
-    OrdersUpdateView, ProductListView, CustomerListView, CustomerDetailView,
-    OrderListView ,OrderDetailView, CategorieDetailView,
-    CategorieListView, UploadCsv, ProfileView, ProfileUpdateView, ExportCsv,
-    CustomerDeleteView, CustomerUpdateView
-
+    Home, ProductListView, ProductCreateView, ProductDeleteView, ProductUpdateView,ProductDetailView,
+    CategorieListView, CategorieDetailView, CategorieCreateView, CategorieDeleteView, 
+    OrderListView , OrdersDeleteView, OrdersUpdateView,OrderDetailView,  
+    CustomerListView, CustomerDetailView,CustomerDeleteView, CustomerUpdateView,
+    ProfileView, ProfileUpdateView, ExportCsv,UploadCsv,
+    
     )
+
 from shop.views import render_pdf_view
 app_name='dashboard'
 
 urlpatterns = [
     path('', Home.as_view(), name='dash'),
     
-    path('pie-chart/', Pie_chart.as_view(), name='pie-chart'),
+    #path('pie-chart/', Pie_chart.as_view(), name='pie-chart'),
     path('profile/', ProfileView.as_view(), name='profile'),
     path('profile/<int:pk>/update/', ProfileUpdateView.as_view(), name='profile-update'),
 
@@ -38,7 +38,7 @@ urlpatterns = [
     path('orders/', OrderListView.as_view(), name='order-list'),
     path('order/<int:pk>/', OrderDetailView.as_view(), name='order-detail'),
 
-    path('order/create/', CreateOrder.as_view(), name='order-create'),
+    #path('order/create/', CreateOrder.as_view(), name='order-create'),
     path('order/<int:pk>/delete/', OrdersDeleteView.as_view(), name='order-delete'),
     path('order/<int:pk>/update/', OrdersUpdateView.as_view(), name='order-update'),
 
@@ -55,5 +55,3 @@ urlpatterns = [
 
 ]
 
-if settings.DEBUG:
-    urlpatterns+=static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

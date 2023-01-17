@@ -9,8 +9,6 @@ from .models import UserProfile, User
 
 # Create your views here.
 
-def home_page(request):
-    return render(request, 'account/home_page.html')
 
 class SignUpView(generic.CreateView):
     template_name='registration/signup.html'

@@ -337,44 +337,6 @@ class OrdersCreateView(CustomerRequiredMixin, generic.FormView):
         else:
             print(subject)
 
-    '''        
-    def get(self, *args, **kwargs):
-        customer=Customer.objects.get(user=self.request.user)
-        cart=Cart.objects.get(customer=customer)
-        items=CartItem.objects.filter(cart=cart)
-    
-        total_price=cart.get_cart_total
-        context = {
-            'items':items,
-            'cart':cart
-        }
-        
-        order = Order.objects.create(
-                customer=customer,
-                total_price=total_price,
-                
-            )
-        
-
-        for item in items:
-            Orderitems.objects.create(order=order,name=item.product.name ,product=item.product, price=item.get_total, quantity=item.quantity)
-        order.save()
-
-        return render(self.request,  'cart/cart.html', context)'''
-
-    
-
-    
-
-
-class OrdersUpdateView(ManagerRequiredMixin, generic.UpdateView):
-    template_name = "orders/order-update.html"
-    form_class = OrderModelForm
-
-    def get_queryset(self):
-        return Order.objects.all()
-    def get_success_url(self):
-        return reverse("shop:order-list")
 
 
 
@@ -385,23 +347,6 @@ class OrdersDeleteView(CustomerRequiredMixin, generic.DeleteView):
     def get_queryset(self):
         return Order.objects.all()
 
-
-class pdf(CustomerRequiredMixin, generic.DetailView):
-    template_name = "orders/order-detail.html"
-
-    def get(self, *args, **kwargs):
-        order_id = self.kwargs['pk']
-        order=Order.objects.get(id=order_id)
-        items=Orderitems.objects.filter(order=order)
-        buffer = io.BytesIO()
-        p = canvas.Canvas(buffer)
-        p.drawString(100, 100, f"Hello{order.name} {order.total_price} ")
-
-        p.showPage()
-        p.save()
-
-        buffer.seek(0)
-        return FileResponse(buffer, as_attachment=True, filename='hello.pdf')
 
 
 def render_pdf_view(request, *args, **kwargs):

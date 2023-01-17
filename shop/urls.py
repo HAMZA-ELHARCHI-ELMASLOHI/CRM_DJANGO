@@ -1,9 +1,12 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+
 from .views import (
     CategorieCreateView,  ProductListView, ProductDetailView, ProductCreateView, ProductDeleteView, ProductUpdateView,
      CategorieDeleteView, CategorieListView, CartItemsView,add_to_cart, delete_from_cart,Shop_home,
-    remove_from_cart, CartView, OrdersCreateView, OrdersDeleteView, OrdersDetailView, OrdersListView, OrdersUpdateView
-    ,CreateOrder, pdf, CategorieDetailView, render_pdf_view, ProfileView, ProfileUpdateView
+    remove_from_cart, CartView, OrdersCreateView, OrdersDeleteView, OrdersDetailView, OrdersListView
+    ,CreateOrder, CategorieDetailView, render_pdf_view, ProfileView, ProfileUpdateView
     )
 
 app_name='shop'
@@ -47,3 +50,4 @@ urlpatterns = [
     path('order/invoice/<int:pk>', render_pdf_view, name='order-invoice')
 
 ]
+

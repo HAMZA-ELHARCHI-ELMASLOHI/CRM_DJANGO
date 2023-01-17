@@ -1,7 +1,7 @@
 {% extends 'dashboard/dash-base.html' %}
 {% load static %}
 
-{% block url %}<a href="{% url 'dashboard:order-list'%}"><button class="btn btn-primary">Create Order</button></a><br>{% endblock url %}
+{% block url %}<a href="{% url 'dashboard:order-list'%}"><br>{% endblock url %}
 {% block type %}Orders {% endblock type %}
 {% block title %}Orders {% endblock title %}
 {% block active %}nav-link text-white{% endblock active %}
@@ -28,7 +28,7 @@
             <td>
             <div class="d-flex align-items-center">
                 <img
-                    src="{{ user.more.image.url }}"
+                    src="{{ o.user.more.image.url }}"
                     alt=""
                     style="width: 45px; height: 45px"
                     class="rounded-circle"

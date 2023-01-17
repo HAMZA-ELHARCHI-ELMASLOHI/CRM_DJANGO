@@ -1,6 +1,5 @@
 from django import forms
 from shop.models import Product, Order, Categorie, Orderitems
-from .models import Csv
 from account.models import Customer, Manager
 
 class ProductModelForm(forms.ModelForm):

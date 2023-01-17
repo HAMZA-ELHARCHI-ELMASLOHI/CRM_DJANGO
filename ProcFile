@@ -1,2 +1,0 @@
-release: pyrhon manage.py migrate
-web: gunicorn Django-CRM.wsgi --log-file=-
