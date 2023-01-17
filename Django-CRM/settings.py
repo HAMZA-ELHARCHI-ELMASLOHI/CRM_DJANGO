@@ -28,7 +28,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 #ALLOWED_HOSTS = os.environ.get(list('ALLOWED_HOSTS'))
 
-#ALLOWED_HOSTS=['127.0.0.1','radiant-lake-93774.herokuapp.com']
 ALLOWED_HOSTS=['*']
 # Application definition
 
