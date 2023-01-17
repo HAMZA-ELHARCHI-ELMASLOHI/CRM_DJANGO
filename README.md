@@ -1,22 +1,49 @@
-# CRM-DJANGO-REACT
+# CRM-DJANGO
 
-- python -m venv venv
-activate environment
-- venv\Scripts\activate.bat
+Django Web application that aims to provide a Client Shop and a manager dashboard attached with invoices and orders
 
-desactivate environment
-- deactivate
+#Setup
+## Run on local
+```
+#Environment
+python -m venv venv
+venv\Scripts\activate.bat
 
-- pip freeze > requirements.txt
+#install requirement
+pip install -r requirements.txt
 
-start django project
-- django-admin startproject  .
+#migrate Database
+python manage.py migrate
+
+#create adminuser
+python manage.py createsuperuser
+
+#run the application
+python manage.py runserver
+```
+
+## Run with docker
+
+```
+docker-compose up -d --build
+docker-compose up
+
+docker exec -it [app container ID] python manage.py migrate
+docker exec -it [app container ID] python manage.py createsuperuser
+
+
+```
     
+add in pg_hba.conf
+
+```
+host replication all 0.0.0.0/0 md5
+```
 
 docker-compose up
 
-docker-compose up -d --build
 
+#stop the containers
 docker-compose down
 
 docker exec -it d8bde4950075 python manage.py migrate
@@ -24,4 +51,4 @@ docker exec -it d8bde4950075 python manage.py migrate
 docker exec -it d8bde4950075 python manage.py createsuperuser
 
 -pg_hba.conf
-host replication all 0.0.0.0/0 md5
+
