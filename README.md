@@ -31,7 +31,6 @@ docker-compose up
 docker exec -it [app container ID] python manage.py migrate
 docker exec -it [app container ID] python manage.py createsuperuser
 
-
 ```
     
 add in pg_hba.conf
@@ -40,15 +39,4 @@ add in pg_hba.conf
 host replication all 0.0.0.0/0 md5
 ```
 
-docker-compose up
-
-
-#stop the containers
-docker-compose down
-
-docker exec -it d8bde4950075 python manage.py migrate
-
-docker exec -it d8bde4950075 python manage.py createsuperuser
-
--pg_hba.conf
 
